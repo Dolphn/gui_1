@@ -100,6 +100,7 @@ public class AbsencePlanner {
 
     public static void main(String[] args) {
         //Test
+        //Testgit
         AbsencePlanner planner = new AbsencePlanner();
 
         Connection con = SQLiteConnection.connect();
