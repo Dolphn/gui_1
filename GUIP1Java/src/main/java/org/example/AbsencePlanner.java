@@ -99,6 +99,7 @@ public class AbsencePlanner {
     }
 
     public static void main(String[] args) {
+        //Test
         AbsencePlanner planner = new AbsencePlanner();
 
         Connection con = SQLiteConnection.connect();
