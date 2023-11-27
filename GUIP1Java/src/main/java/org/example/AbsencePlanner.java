@@ -72,6 +72,23 @@ public class AbsencePlanner {
         }
     }
 
+    public void aproveAbsence(String employeeName, int absenceIndex){
+        Employee employee = getEmployeeByName(employeeName);
+        if (employee != null && absenceIndex >= 0 && absenceIndex < employee.absences.size()) {
+            int absenceId = employee.absences.get(absenceIndex).id;
+            String aproveAbsenceSQL = "UPDATE absences SET approved = 1 WHERE id = ?;";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(aproveAbsenceSQL)) {
+                preparedStatement.setInt(1, absenceId);
+                preparedStatement.executeUpdate();
+
+                System.out.println("Abwesenheit genehmigt für '" + employeeName + "'.");
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+    }
+
     public void deleteAbsence(String employeeName, int absenceIndex) {
         Employee employee = getEmployeeByName(employeeName);
         if (employee != null && absenceIndex >= 0 && absenceIndex < employee.absences.size()) {
@@ -89,11 +106,40 @@ public class AbsencePlanner {
         }
     }
 
+
     private Employee getEmployeeByName(String employeeName) {
+        //alter Code Funktioniert nicht, weil team nicht benutzt wird.
         for (Employee employee : team.employees.values()) {
             if ((employee.firstName + " " + employee.lastName).equals(employeeName)) {
                 return employee;
             }
+        }
+
+        //neuer versuch
+        Employee employee = new Employee();
+        String[] employeeNames =  employeeName.split(" ");
+        String first_name = employeeNames[0];
+        String last_name =  employeeNames[1];
+        //String getEmployeeIdSQL = "SELECT id FROM employees WHERE first_name="+first_name+" AND last_name="+last_name+";";
+        String getEmployeeIdSQL = "SELECT * FROM employees WHERE first_name= ? AND last_name= ? ;";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(getEmployeeIdSQL)) {
+            preparedStatement.setString(1, first_name);
+            preparedStatement.setString(2, last_name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                employee.id = resultSet.getInt("id");
+                employee.firstName = resultSet.getString("first_name");
+                employee.lastName = resultSet.getString("last_name");
+                employee.favoriteColor = resultSet.getString("favorite_color");
+
+                System.out.println("Employee "+ employeeName + " gefunden!");
+                return employee;
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
         return null;
     }
@@ -106,13 +152,13 @@ public class AbsencePlanner {
         Connection con = SQLiteConnection.connect();
 
         // Mitarbeiter hinzufügen
-        planner.addEmployee("Lisa", "Mustermann", "#87CEFA");
+        planner.addEmployee("Max", "Mustermann", "#87CEFA");
 
         // Abwesenheitsantrag stellen
-        planner.requestAbsence("Lisa Mustermann", AbsenceType.VACATION, "2023-01-01", "2023-01-07");
+        planner.requestAbsence("Max Mustermann", AbsenceType.VACATION, "2023-01-01", "2023-01-07");
 
-        // Abwesenheit löschen
-        planner.deleteAbsence("Lisa Mustermann", 0);
+        // Abwesenheit genehmigen
+        planner.aproveAbsence("Max Mustermann", 0);
 
         String query = "SELECT * FROM employees;";
         try (Statement statement = con.createStatement();
