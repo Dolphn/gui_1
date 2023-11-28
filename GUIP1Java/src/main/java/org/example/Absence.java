@@ -7,4 +7,14 @@ class Absence {
     String startDate;
     String endDate;
     boolean approved;
+
+    public String toString(){
+        String string;
+        if(approved) {
+            string = type.toString() + " " + startDate + " " + endDate + " " + "approved";
+        }else {
+            string = type.toString() + " " + startDate + " " + endDate + " " + "not approved";
+        }
+        return string;
+    }
 }

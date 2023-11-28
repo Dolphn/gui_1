@@ -1,6 +1,7 @@
 package org.example;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class AbsencePlanner {
     private Team team;
@@ -48,6 +49,19 @@ public class AbsencePlanner {
             preparedStatement.executeUpdate();
 
             System.out.println("Mitarbeiter '" + firstName + " " + lastName + "' hinzugefügt.");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void deleteEmployee(int id){
+        String deleteEmployeeSQL = "DELETE FROM employees WHERE id = ?;";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(deleteEmployeeSQL)) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+
+            System.out.println("Mitarbeiter '" + id + "' geloescht.");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -106,6 +120,30 @@ public class AbsencePlanner {
         }
     }
 
+    private ArrayList<Absence> getAllAbsencesByEmployeeId(int id){
+        ArrayList<Absence> absences = new ArrayList<>();
+        String getAbsencesByIdSQL = "SELECT * FROM absences WHERE employee_id= ? ;";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(getAbsencesByIdSQL)){
+            preparedStatement.setInt(1,id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()){
+                Absence absence = new Absence();
+                absence.id = resultSet.getInt(1);
+                absence.employeeId = resultSet.getInt(2);
+                absence.type = AbsenceType.getAbscenceTypeByString(resultSet.getString(3));
+                absence.startDate = resultSet.getString(4);
+                absence.endDate = resultSet.getString(5);
+                absence.approved = resultSet.getBoolean(6);
+                absences.add(absence);
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return absences;
+    }
+
 
     private Employee getEmployeeByName(String employeeName) {
         //alter Code Funktioniert nicht, weil team nicht benutzt wird.
@@ -133,10 +171,12 @@ public class AbsencePlanner {
                 employee.firstName = resultSet.getString("first_name");
                 employee.lastName = resultSet.getString("last_name");
                 employee.favoriteColor = resultSet.getString("favorite_color");
-
+                employee.absences = getAllAbsencesByEmployeeId(employee.id);
                 System.out.println("Employee "+ employeeName + " gefunden!");
+                resultSet.close();
                 return employee;
             }
+            resultSet.close();
 
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -151,8 +191,9 @@ public class AbsencePlanner {
 
         Connection con = SQLiteConnection.connect();
 
-        // Mitarbeiter hinzufügen
+        //neuen Mitarbeiter hinzufügen
         planner.addEmployee("Max", "Mustermann", "#87CEFA");
+
 
         // Abwesenheitsantrag stellen
         planner.requestAbsence("Max Mustermann", AbsenceType.VACATION, "2023-01-01", "2023-01-07");
@@ -160,6 +201,9 @@ public class AbsencePlanner {
         // Abwesenheit genehmigen
         planner.aproveAbsence("Max Mustermann", 0);
 
+
+
+        //alle Mitarbeiter ausgeben
         String query = "SELECT * FROM employees;";
         try (Statement statement = con.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
@@ -172,6 +216,11 @@ public class AbsencePlanner {
                 String favoriteColor = resultSet.getString("favorite_color");
 
                 System.out.println("ID: " + id + ", Name: " + firstName + " " + lastName + ", Lieblingsfarbe: " + favoriteColor);
+                System.out.println("Abwesenheiten für diesen Mitarbeiter:");
+                ArrayList<Absence> absences = planner.getAllAbsencesByEmployeeId(id);
+                for(Absence a:absences){
+                    System.out.println("    " + a.toString());
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -186,7 +235,15 @@ public class AbsencePlanner {
             }
         }
 
+        //Abwesenheit entfernen
+        planner.deleteAbsence("Max Mustermann",0);
+
+        //Mitarbeiter entfernen
+        planner.deleteEmployee(planner.getEmployeeByName("Max Mustermann").id);
+
         // Datenbankverbindung schließen
         SQLiteConnection.disconnect(con);
     }
+
+
 }
