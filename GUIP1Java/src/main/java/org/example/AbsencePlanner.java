@@ -23,7 +23,7 @@ public class AbsencePlanner extends Application {
     public void start(Stage stage) throws Exception {
         //GUI erzeugen
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("main_window.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/main_window.fxml"));
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("Abwesenheitsplaner");
@@ -257,49 +257,4 @@ public class AbsencePlanner extends Application {
         return null;
     }
 
-    public static void main(String[] args) {
-        //Test
-        //Testgit
-        AbsencePlanner planner = new AbsencePlanner();
-
-        Connection con = SQLiteConnection.connect();
-
-        // Mitarbeiter hinzufügen
-        planner.addEmployee("Lisa", "Mustermann", "#87CEFA");
-
-        // Abwesenheitsantrag stellen
-        planner.requestAbsence("Lisa Mustermann", AbsenceType.VACATION, "2023-01-01", "2023-01-07");
-
-        // Abwesenheit löschen
-        planner.deleteAbsence("Lisa Mustermann", 0);
-
-        String query = "SELECT * FROM employees;";
-        try (Statement statement = con.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
-
-            // Mitarbeiterdaten aus der Abfrage auslesen und ausgeben
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String firstName = resultSet.getString("first_name");
-                String lastName = resultSet.getString("last_name");
-                String favoriteColor = resultSet.getString("favorite_color");
-
-                System.out.println("ID: " + id + ", Name: " + firstName + " " + lastName + ", Lieblingsfarbe: " + favoriteColor);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Verbindung schließen
-            try {
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // Datenbankverbindung schließen
-        SQLiteConnection.disconnect(con);
-    }
 }
