@@ -140,8 +140,8 @@ public class AbsencePlanner extends Application {
         }
     }
 
-    public void requestAbsence(String employeeName, AbsenceType type, String startDate, String endDate) {
-        Employee employee = getEmployeeByName(employeeName);
+    public void requestAbsence(int id, AbsenceType type, String startDate, String endDate) {
+        Employee employee = getEmployeeByid(id);
         if (employee != null) {
             String insertAbsenceSQL = "INSERT INTO absences (employee_id, type, start_date, end_date, approved) VALUES (?, ?, ?, ?, 0);";
 
@@ -152,15 +152,15 @@ public class AbsencePlanner extends Application {
                 preparedStatement.setString(4, endDate);
                 preparedStatement.executeUpdate();
 
-                System.out.println("Abwesenheitsantrag für '" + employeeName + "' erstellt.");
+                //System.out.println("Abwesenheitsantrag für '" + employeeName + "' erstellt.");
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
         }
     }
 
-    public void aproveAbsence(String employeeName, int absenceIndex){
-        Employee employee = getEmployeeByName(employeeName);
+    public void aproveAbsence(int id, int absenceIndex){
+        Employee employee = getEmployeeByid(id);
         if (employee != null && absenceIndex >= 0 && absenceIndex < employee.absences.size()) {
             int absenceId = employee.absences.get(absenceIndex).id;
             String aproveAbsenceSQL = "UPDATE absences SET approved = 1 WHERE id = ?;";
@@ -169,15 +169,15 @@ public class AbsencePlanner extends Application {
                 preparedStatement.setInt(1, absenceId);
                 preparedStatement.executeUpdate();
 
-                System.out.println("Abwesenheit genehmigt für '" + employeeName + "'.");
+                //System.out.println("Abwesenheit genehmigt für '" + employeeName + "'.");
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
         }
     }
 
-    public void deleteAbsence(String employeeName, int absenceIndex) {
-        Employee employee = getEmployeeByName(employeeName);
+    public void deleteAbsence(int id, int absenceIndex) {
+        Employee employee = getEmployeeByid(id);
         if (employee != null && absenceIndex >= 0 && absenceIndex < employee.absences.size()) {
             int absenceId = employee.absences.get(absenceIndex).id;
             String deleteAbsenceSQL = "DELETE FROM absences WHERE id = ?;";
@@ -186,7 +186,7 @@ public class AbsencePlanner extends Application {
                 preparedStatement.setInt(1, absenceId);
                 preparedStatement.executeUpdate();
 
-                System.out.println("Abwesenheit gelöscht für '" + employeeName + "'.");
+                //System.out.println("Abwesenheit gelöscht für '" + employeeName + "'.");
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
