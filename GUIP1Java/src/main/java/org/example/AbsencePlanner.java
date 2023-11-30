@@ -41,43 +41,9 @@ public class AbsencePlanner extends Application {
         //Test
         //Testgit
         AbsencePlanner planner = new AbsencePlanner();
+        planner.initializeDatabase();
 
         Connection con = SQLiteConnection.connect();
-
-        // Mitarbeiter hinzufügen
-        planner.addEmployee("Lisa", "Mustermann", "#87CEFA");
-
-        // Abwesenheitsantrag stellen
-        planner.requestAbsence("Lisa Mustermann", AbsenceType.VACATION, "2023-01-01", "2023-01-07");
-
-        // Abwesenheit löschen
-        planner.deleteAbsence("Lisa Mustermann", 0);
-
-        String query = "SELECT * FROM employees;";
-        try (Statement statement = con.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
-
-            // Mitarbeiterdaten aus der Abfrage auslesen und ausgeben
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String firstName = resultSet.getString("first_name");
-                String lastName = resultSet.getString("last_name");
-                String favoriteColor = resultSet.getString("favorite_color");
-
-                System.out.println("ID: " + id + ", Name: " + firstName + " " + lastName + ", Lieblingsfarbe: " + favoriteColor);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            // Verbindung schließen
-            try {
-                if (con != null) {
-                    con.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
 
         // Datenbankverbindung schließen
         SQLiteConnection.disconnect(con);
@@ -194,7 +160,24 @@ public class AbsencePlanner extends Application {
     }
 
     private ArrayList<Employee> getAllEmployees(){
+        ArrayList<Employee> employees = new ArrayList<>();
 
+        String getEmployeesSQL = "SELECT * FROM employees";
+        try(Statement stm = connection.createStatement()){
+            ResultSet rs = stm.executeQuery(getEmployeesSQL);
+            while(rs.next()){
+                Employee employee = new Employee();
+                employee.id = rs.getInt(1);
+                employee.firstName = rs.getString(2);
+                employee.lastName = rs.getString(3);
+                employee.favoriteColor = rs.getString(4);
+                employee.absences = getAllAbsencesByEmployeeId(employee.id);
+                employees.add(employee);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return employees;
     }
 
     private ArrayList<Absence> getAllAbsencesByEmployeeId(int id){
@@ -221,6 +204,24 @@ public class AbsencePlanner extends Application {
         return absences;
     }
 
+    private int getIdByName(String name){
+        String firstname = name.split(" ")[0];
+        String lastname = name.split(" ")[1];
+        String getEmployeeByNameSQL = "SELECT id FROM employees WHERE firstname = ? AND lastname = ?;";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(getEmployeeByNameSQL)){
+            preparedStatement.setString(1,firstname);
+            preparedStatement.setString(2,lastname);
+            ResultSet resultSet = preparedStatement.executeQuery(getEmployeeByNameSQL);
+            if(resultSet.next()){
+                return resultSet.getInt(1);
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return -1;
+    }
 
     private Employee getEmployeeByid(int id) {
 
