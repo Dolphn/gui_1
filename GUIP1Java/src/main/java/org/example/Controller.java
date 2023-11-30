@@ -2,8 +2,15 @@ package org.example;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class Controller {
 
@@ -60,8 +67,14 @@ public class Controller {
 
     }
     @FXML
-    public void ButtonNewEmployee(ActionEvent e) {
+    public void ButtonNewEmployee(ActionEvent e) throws IOException {
+        Stage window = new Stage();
+        window.setScene(new Scene(FXMLLoader.load(getClass().getResource("/newEmployee.fxml"))));
 
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle("Neuen Mitarbeiter anlegen");
+
+        window.showAndWait();
     }
     @FXML
     public void newEmployee(ActionEvent e) {
@@ -69,14 +82,6 @@ public class Controller {
     }
     @FXML
     public void ButtonNewAbsence(ActionEvent e) {
-
-    }
-    @FXML
-    public void RemoveSelTeam(ActionEvent e) {
-
-    }
-    @FXML
-    public void AddSelTeam(ActionEvent e) {
 
     }
 }

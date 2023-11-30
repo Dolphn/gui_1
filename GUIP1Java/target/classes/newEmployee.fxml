@@ -10,16 +10,15 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="410.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controller">
+<AnchorPane prefHeight="410.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"  fx:controller="org.example.EmployeeController">
    <children>
-      <ColorPicker layoutX="50.0" layoutY="205.0" prefHeight="26.0" prefWidth="135.0">
+      <ColorPicker fx:id="colorPicker" layoutX="50.0" layoutY="205.0" prefHeight="26.0" prefWidth="135.0">
          <value>
             <Color red="1.0" green="0.33000001311302185" blue="0.33000001311302185" opacity="0.8115501403808594" />
          </value>
       </ColorPicker>
-      <TextField layoutX="50.0" layoutY="102.0" prefHeight="26.0" prefWidth="260.0" />
-      <TextField layoutX="50.0" layoutY="156.0" prefHeight="26.0" prefWidth="260.0" />
+      <TextField fx:id="firstname" layoutX="50.0" layoutY="102.0" prefHeight="26.0" prefWidth="260.0" />
+      <TextField fx:id="lastname" layoutX="50.0" layoutY="156.0" prefHeight="26.0" prefWidth="260.0" />
       <Label layoutX="128.0" layoutY="21.0" text="Neuen Mitarbeiter anlegen">
          <font>
             <Font name="System Bold" size="27.0" />
@@ -31,7 +30,7 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="228.0" prefWidth="200.0">
                <children>
-                  <ListView fx:id="teamsList" prefHeight="230.0" prefWidth="200.0" />
+                  <ListView fx:id="teamsList" editable="true" prefHeight="230.0" prefWidth="200.0" />
                </children>
             </AnchorPane>
         </content>
@@ -49,6 +48,6 @@
             <Font name="System Bold" size="13.0" />
          </font>
       </Button>
-      <Button layoutX="70.0" layoutY="345.0" mnemonicParsing="false" text="Abbrechen" />
+      <Button layoutX="70.0" layoutY="345.0" mnemonicParsing="false" onAction="#interrupt" text="Abbrechen" />
    </children>
 </AnchorPane>

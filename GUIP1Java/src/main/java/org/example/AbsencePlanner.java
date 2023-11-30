@@ -10,8 +10,8 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class AbsencePlanner extends Application {
-    private Team team;
-    private Connection connection;
+    private static Team team;
+    private static Connection connection;
 
     public AbsencePlanner() {
         team = new Team();
@@ -82,7 +82,7 @@ public class AbsencePlanner extends Application {
         // Datenbankverbindung schließen
         SQLiteConnection.disconnect(con);
     }
-    private void initializeDatabase() {
+    private static void initializeDatabase() {
         String createEmployeesTableSQL = """
                 CREATE TABLE IF NOT EXISTS employees (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -112,7 +112,7 @@ public class AbsencePlanner extends Application {
         }
     }
 
-    public void addEmployee(String firstName, String lastName, String favoriteColor) {
+    public static void addEmployee(String firstName, String lastName, String favoriteColor) {
         String insertEmployeeSQL = "INSERT INTO employees (first_name, last_name, favorite_color) VALUES (?, ?, ?);";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertEmployeeSQL)) {
@@ -127,7 +127,7 @@ public class AbsencePlanner extends Application {
         }
     }
 
-    public void deleteEmployee(int id){
+    public static void deleteEmployee(int id){
         String deleteEmployeeSQL = "DELETE FROM employees WHERE id = ?;";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(deleteEmployeeSQL)) {
@@ -140,7 +140,7 @@ public class AbsencePlanner extends Application {
         }
     }
 
-    public void requestAbsence(String employeeName, AbsenceType type, String startDate, String endDate) {
+    public static void requestAbsence(String employeeName, AbsenceType type, String startDate, String endDate) {
         Employee employee = getEmployeeByName(employeeName);
         if (employee != null) {
             String insertAbsenceSQL = "INSERT INTO absences (employee_id, type, start_date, end_date, approved) VALUES (?, ?, ?, ?, 0);";
@@ -176,7 +176,7 @@ public class AbsencePlanner extends Application {
         }
     }
 
-    public void deleteAbsence(String employeeName, int absenceIndex) {
+    public static void deleteAbsence(String employeeName, int absenceIndex) {
         Employee employee = getEmployeeByName(employeeName);
         if (employee != null && absenceIndex >= 0 && absenceIndex < employee.absences.size()) {
             int absenceId = employee.absences.get(absenceIndex).id;
@@ -193,7 +193,7 @@ public class AbsencePlanner extends Application {
         }
     }
 
-    private ArrayList<Absence> getAllAbsencesByEmployeeId(int id){
+    private static ArrayList<Absence> getAllAbsencesByEmployeeId(int id){
         ArrayList<Absence> absences = new ArrayList<>();
         String getAbsencesByIdSQL = "SELECT * FROM absences WHERE employee_id= ? ;";
         try(PreparedStatement preparedStatement = connection.prepareStatement(getAbsencesByIdSQL)){
@@ -218,7 +218,7 @@ public class AbsencePlanner extends Application {
     }
 
 
-    private Employee getEmployeeByName(String employeeName) {
+    private static Employee getEmployeeByName(String employeeName) {
         //alter Code Funktioniert nicht, weil team nicht benutzt wird.
         for (Employee employee : team.employees.values()) {
             if ((employee.firstName + " " + employee.lastName).equals(employeeName)) {
@@ -255,6 +255,10 @@ public class AbsencePlanner extends Application {
             System.err.println(e.getMessage());
         }
         return null;
+    }
+
+    public static ArrayList<String> getTeams(){
+        return null; //TODO
     }
 
 }
