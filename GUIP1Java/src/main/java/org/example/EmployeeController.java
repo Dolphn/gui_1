@@ -56,9 +56,10 @@ public class EmployeeController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        String[] a = new String[]{"lol", "go", "haha"};
         ArrayList<String> teams = AbsencePlanner.getTeams();
-        teamsList.getItems().addAll(teams);
+        if (teams != null){
+            teamsList.getItems().addAll(teams);
+        }
         teamsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         teamsList.getSelectionModel().selectedItemProperty().addListener(this::selectionChanged);
     }

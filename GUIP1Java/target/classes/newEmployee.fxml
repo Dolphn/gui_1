@@ -10,7 +10,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="410.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"  fx:controller="org.example.EmployeeController">
+<AnchorPane prefHeight="410.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.EmployeeController">
    <children>
       <ColorPicker fx:id="colorPicker" layoutX="50.0" layoutY="205.0" prefHeight="26.0" prefWidth="135.0">
          <value>
@@ -30,12 +30,12 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="228.0" prefWidth="200.0">
                <children>
-                  <ListView fx:id="teamsList" editable="true" prefHeight="230.0" prefWidth="200.0" />
+                  <ListView fx:id="teamsList" prefHeight="230.0" prefWidth="200.0" />
                </children>
             </AnchorPane>
         </content>
       </ScrollPane>
-      <Label fx:id="selectedTeams" layoutX="243.0" layoutY="377.0" prefHeight="18.0" prefWidth="343.0" textAlignment="RIGHT" />
+      <Label fx:id="selectedTeams" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="243.0" layoutY="377.0" prefHeight="18.0" prefWidth="343.0" textAlignment="RIGHT" textOverrun="CLIP" wrapText="true" />
       <Button layoutX="225.0" layoutY="205.0" mnemonicParsing="false" onAction="#RemoveSelTeam" prefHeight="26.0" prefWidth="149.0" text="Ausgwähltes Entfernen" textFill="RED" textOverrun="CLIP" />
       <Button layoutX="225.0" layoutY="241.0" mnemonicParsing="false" onAction="#AddSelTeam" prefHeight="26.0" prefWidth="149.0" text="Ausgwähltes hinzufügen" textOverrun="CLIP" />
       <Label layoutX="371.0" layoutY="114.0" text="Kompetenzteams wählen">
