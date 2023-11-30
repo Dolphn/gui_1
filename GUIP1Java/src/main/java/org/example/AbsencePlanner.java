@@ -132,7 +132,7 @@ public class AbsencePlanner extends Application {
         return new Employee(); //TODO auf ID ändern, I guess?
     }
 
-    public void approveAbsence(int id, int absenceIndex){
+    public static void approveAbsence(int id, int absenceIndex){
         Employee employee = getEmployeeByid(id);
         if (employee != null && absenceIndex >= 0 && absenceIndex < employee.absences.size()) {
             int absenceId = employee.absences.get(absenceIndex).id;
@@ -188,7 +188,7 @@ public class AbsencePlanner extends Application {
         return employees;
     }
 */
-    private ArrayList<Absence> getAllAbsencesByEmployeeId(int id){
+    public static ArrayList<Absence> getAllAbsencesByEmployeeId(int id){
         ArrayList<Absence> absences = new ArrayList<>();
         String getAbsencesByIdSQL = "SELECT * FROM absences WHERE employee_id= ? ;";
         try(PreparedStatement preparedStatement = connection.prepareStatement(getAbsencesByIdSQL)){
@@ -239,7 +239,7 @@ public class AbsencePlanner extends Application {
     */
 
 
-    private Employee getEmployeeByid(int id) {
+    private static Employee getEmployeeByid(int id) {
 
         //neuer versuch
         Employee employee = new Employee();

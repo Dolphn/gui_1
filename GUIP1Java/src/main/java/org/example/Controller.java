@@ -3,31 +3,35 @@ package org.example;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.*;
 
-public class Controller {
+public class Controller implements Initializable {
 
     @FXML
     private AnchorPane anchor;
 
     @FXML
-    private TableView<?> datesTeams;
+    private HBox hBoxAbseces;
 
     @FXML
-    private TableColumn<?, ?> firstnameEmployees;
+    private HBox hBoxEmployees;
 
     @FXML
-    private TableColumn<?, ?> lastnameEmployees;
+    private HBox hBoxTeamDates;
 
     @FXML
-    private TableColumn<?, ?> nameTeam;
+    private HBox hBoxTeams;
 
     @FXML
     private ScrollPane scrollPaneCalendar;
@@ -37,25 +41,6 @@ public class Controller {
 
     @FXML
     private ScrollPane scrollPaneUsers;
-
-    @FXML
-    private TableView<?> tableDates;
-
-    @FXML
-    private TableView<?> tableEmpoyees;
-
-    @FXML
-    private TableView<?> tableTeams;
-
-    @FXML
-    private TableColumn<?, ?> today;
-
-    @FXML
-    private TableColumn<?, ?> todayTeams;
-
-    @FXML
-    private ListView<String> teamsList;
-
     @FXML
     private Label selectedTeams;
     @FXML
@@ -83,5 +68,31 @@ public class Controller {
     @FXML
     public void ButtonNewAbsence(ActionEvent e) {
 
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        ArrayList<Employee> emps = AbsencePlanner.getAllEmployees();
+        HashMap<Employee, ArrayList<Absence>> allAbsences = new HashMap<>();
+        for (Employee e: emps) {
+            allAbsences.put(e, AbsencePlanner.getAllAbsencesByEmployeeId(e.id));
+        }
+
+        Collections.sort(emps, new Comparator<Employee>() {
+            @Override
+            public int compare(Employee o1, Employee o2) {
+                return o1.lastName.compareTo(o2.lastName);
+            }
+        });
+
+        for (Employee e: emps) {
+
+
+
+
+
+
+
+        }
     }
 }
