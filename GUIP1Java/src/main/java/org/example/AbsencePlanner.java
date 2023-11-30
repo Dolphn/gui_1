@@ -193,6 +193,10 @@ public class AbsencePlanner extends Application {
         }
     }
 
+    private ArrayList<Employee> getAllEmployees(){
+
+    }
+
     private ArrayList<Absence> getAllAbsencesByEmployeeId(int id){
         ArrayList<Absence> absences = new ArrayList<>();
         String getAbsencesByIdSQL = "SELECT * FROM absences WHERE employee_id= ? ;";
@@ -218,25 +222,15 @@ public class AbsencePlanner extends Application {
     }
 
 
-    private Employee getEmployeeByName(String employeeName) {
-        //alter Code Funktioniert nicht, weil team nicht benutzt wird.
-        for (Employee employee : team.employees.values()) {
-            if ((employee.firstName + " " + employee.lastName).equals(employeeName)) {
-                return employee;
-            }
-        }
+    private Employee getEmployeeByid(int id) {
 
         //neuer versuch
         Employee employee = new Employee();
-        String[] employeeNames =  employeeName.split(" ");
-        String first_name = employeeNames[0];
-        String last_name =  employeeNames[1];
         //String getEmployeeIdSQL = "SELECT id FROM employees WHERE first_name="+first_name+" AND last_name="+last_name+";";
-        String getEmployeeIdSQL = "SELECT * FROM employees WHERE first_name= ? AND last_name= ? ;";
+        String getEmployeeIdSQL = "SELECT * FROM employees WHERE id= ?;";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(getEmployeeIdSQL)) {
-            preparedStatement.setString(1, first_name);
-            preparedStatement.setString(2, last_name);
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
@@ -245,7 +239,7 @@ public class AbsencePlanner extends Application {
                 employee.lastName = resultSet.getString("last_name");
                 employee.favoriteColor = resultSet.getString("favorite_color");
                 employee.absences = getAllAbsencesByEmployeeId(employee.id);
-                System.out.println("Employee "+ employeeName + " gefunden!");
+                //System.out.println("Employee "+ employeeName + " gefunden!");
                 resultSet.close();
                 return employee;
             }
