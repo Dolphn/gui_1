@@ -78,6 +78,9 @@ public class AbsencePlanner extends Application {
         }
     }
 
+    public static void updateEmployee(String firstName, String lastName, String favoriteColor){
+        //TODO
+    }
     public static void addEmployee(String firstName, String lastName, String favoriteColor) {
         String insertEmployeeSQL = "INSERT INTO employees (first_name, last_name, favorite_color) VALUES (?, ?, ?);";
 
@@ -126,10 +129,10 @@ public class AbsencePlanner extends Application {
     }
 
     private static Employee getEmployeeByName(String employeeName) {
-        return new Employee(); //TODO
+        return new Employee(); //TODO auf ID ändern, I guess?
     }
 
-    public void aproveAbsence(int id, int absenceIndex){
+    public void approveAbsence(int id, int absenceIndex){
         Employee employee = getEmployeeByid(id);
         if (employee != null && absenceIndex >= 0 && absenceIndex < employee.absences.size()) {
             int absenceId = employee.absences.get(absenceIndex).id;
@@ -268,5 +271,31 @@ public class AbsencePlanner extends Application {
     public static ArrayList<String> getTeams(){
         return null; //TODO
     }
+    public static void deleteTeam(String name){
+        //TODO
+    }
+    public static void addTeam(String name) {
+        //TODO
+    }
+
+    public static ArrayList<AbsenceType> getAllAbsenceTypes() {
+        //TODO
+        return null;
+    }
+
+    public static void addAbsenceType(String type) {
+        //TODO
+    }
+
+    public static void deleteAbsenceType(AbsenceType type) {
+        //TODO
+    }
+
+    public static ArrayList<Employee> getAllEmployees() {
+        //TODO
+        return null;
+    }
+
+
 
 }
