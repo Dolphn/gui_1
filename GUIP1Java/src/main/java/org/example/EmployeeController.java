@@ -15,6 +15,15 @@ package org.example;
         import java.util.ResourceBundle;
 
 public class EmployeeController implements Initializable {
+    Employee employee = null;
+    boolean edit = false;
+
+    public EmployeeController(){
+    }
+    public EmployeeController(Employee employee, boolean edit){
+        this.employee = employee;
+        this.edit = edit;
+    }
 
     @FXML
     private TextField firstname;
@@ -31,6 +40,9 @@ public class EmployeeController implements Initializable {
     @FXML
     private ColorPicker colorPicker;
 
+
+    @FXML
+    private Label headline;
 
     @FXML
     void AddSelTeam(ActionEvent event) {
@@ -54,14 +66,32 @@ public class EmployeeController implements Initializable {
         AbsencePlanner.addEmployee(firstname.getText(), lastname.getText(), str);
     }
 
+    @FXML
+    void deleteEmployee(ActionEvent event) {
+        if(edit) {
+            AbsencePlanner.deleteEmployee(employee.id);
+        }
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         ArrayList<String> teams = AbsencePlanner.getTeams();
-        if (teams != null){
-            teamsList.getItems().addAll(teams);
+        if (this.edit) {
+            lastname.setText(employee.lastName);
+            firstname.setText(employee.firstName);
+            colorPicker.setValue(Color.valueOf(employee.favoriteColor));
+
+            ArrayList<String> currentTeams = AbsencePlanner.getTeamsOfEmployee(employee.id);
+            for (String s : currentTeams) {
+                teamsList.getSelectionModel().select(s);
+            }
+            headline.setText("Mitarbeiter verwalten");
         }
-        teamsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        teamsList.getSelectionModel().selectedItemProperty().addListener(this::selectionChanged);
+            if (teams != null){
+                teamsList.getItems().addAll(teams);
+            }
+            teamsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+            teamsList.getSelectionModel().selectedItemProperty().addListener(this::selectionChanged);
     }
 
     private void selectionChanged(ObservableValue<? extends String> observable, String oldV, String newV){

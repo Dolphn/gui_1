@@ -310,4 +310,15 @@ public class AbsencePlanner extends Application {
         return null;
         //TODO
     }
+    public static ArrayList<Map<Employee, Absence>> getAbsancesPerEmployeeByDay(LocalDate date){
+        return null;
+        //TODO Priorität! Wäre doch sorum am einfachsten für mich, heißt, alle Absances, die über den tag gehen werden mit dem yugehörigen MA ausgegeben
+    }
+
+    public static ArrayList<String> getTeamsOfEmployee(int id){
+        return null;
+        //TODO
+    }
+
+    //TODO Bitte ein paar Testdaten einfügen!
 }

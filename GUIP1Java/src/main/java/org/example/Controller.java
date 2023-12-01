@@ -67,7 +67,6 @@ public class Controller implements Initializable {
 
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Neuen Mitarbeiter anlegen");
-
         window.showAndWait();
     }
     @FXML
@@ -118,20 +117,78 @@ public class Controller implements Initializable {
 
             dateBox.getChildren().add(label);
 
+            List<_> absences = AbsencePlanner.getAllAbsencesByEmployeeId()
             for (Employee e : emps) {
+                if ()
+                Button edit = new Button();
+                edit.minHeight(height);
+                edit.maxHeight(height);
+                edit.setMinWidth(30);
+                edit.setMaxWidth(30);
+                edit.setOnAction(event -> {
+                    Stage window = new Stage();
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/newEmployee.fxml"));
+                        loader.setController(new EmployeeController(e, true));
+                        window.setScene(new Scene(loader.load()));
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
 
+                    window.initModality(Modality.APPLICATION_MODAL);
+                    window.setTitle("Mitarbeiter ändern");
+                    window.showAndWait();
+                });
 
             }
         }
+        HBox hBoxE = new HBox();
+        hBoxE.maxHeight(height);
+        hBoxE.minHeight(height);
+        hBoxE.maxWidth(200);
+        hBoxE.setMinWidth(200);
+        vBoxEmployees.getChildren().add(hBoxE);
 
         for (Employee e:emps) {
             HBox hBox = new HBox();
             hBox.maxHeight(height);
             hBox.minHeight(height);
             hBox.maxWidth(200);
-            hBox.minWidth(200);
+            hBox.setMinWidth(200);
 
-            Label lastname;
+            Label lastname = new Label(e.lastName);
+            Label firstname = new Label(e.firstName);
+
+            lastname.minHeight(height);
+            lastname.maxHeight(height);
+            lastname.setMinWidth(85);
+            lastname.setMaxWidth(85);
+            firstname.minHeight(height);
+            firstname.maxHeight(height);
+            firstname.setMinWidth(85);
+            firstname.setMaxWidth(85);
+
+            Button edit = new Button("Edit");
+            edit.minHeight(height);
+            edit.maxHeight(height);
+            edit.setMinWidth(30);
+            edit.setMaxWidth(30);
+            edit.setOnAction(event -> {
+                Stage window = new Stage();
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/newEmployee.fxml"));
+                    loader.setController(new EmployeeController(e, true));
+                    window.setScene(new Scene(loader.load()));
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                window.initModality(Modality.APPLICATION_MODAL);
+                window.setTitle("Mitarbeiter ändern");
+                window.showAndWait();
+            });
+            hBox.getChildren().addAll(lastname, firstname, edit);
+            vBoxEmployees.getChildren().add(hBox);
         }
     }
 }
