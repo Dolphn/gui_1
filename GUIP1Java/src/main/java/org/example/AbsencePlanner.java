@@ -7,7 +7,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class AbsencePlanner extends Application {
     private static Team team;
@@ -296,6 +298,16 @@ public class AbsencePlanner extends Application {
         return null;
     }
 
+    public static LocalDate getHighetDate() {
+        return null; //TODO
+    }
 
 
+    //TODO Bitte die Dates als LocalDate-Objekte ausgeben, wenn möglich; Heißt, in der Klasse Absence und die returns ändern.
+    // https://stackoverflow.com/questions/20165564/calculating-days-between-two-dates-with-java
+
+    public static ArrayList<Map<Team, Integer>> getAbsancesPerTeamByDay(LocalDate date){
+        return null;
+        //TODO
+    }
 }
