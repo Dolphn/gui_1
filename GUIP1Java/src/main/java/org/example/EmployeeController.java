@@ -1,102 +1,112 @@
 package org.example;
 
-        import javafx.beans.value.ObservableValue;
-        import javafx.collections.ObservableList;
-        import javafx.event.ActionEvent;
-        import javafx.fxml.FXML;
-        import javafx.fxml.Initializable;
-        import javafx.scene.Node;
-        import javafx.scene.control.*;
-        import javafx.scene.paint.Color;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
-        import java.net.URL;
-        import java.util.ArrayList;
-        import java.util.Arrays;
-        import java.util.ResourceBundle;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class EmployeeController implements Initializable {
-    Employee employee = null;
-    boolean edit = false;
+public class EmployeeController {
+    private final Connection connection;
 
-    public EmployeeController(){
-    }
-    public EmployeeController(Employee employee, boolean edit){
-        this.employee = employee;
-        this.edit = edit;
+    public EmployeeController() {
+        this.connection = SQLiteConnection.connect();
     }
 
-    @FXML
-    private TextField firstname;
+    public ObservableList<String> getEmployeeNames() {
+        ObservableList<String> employeeNames = FXCollections.observableArrayList();
+        String query = "SELECT first_name, last_name FROM employees;";
 
-    @FXML
-    private TextField lastname;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
 
-    @FXML
-    private Label selectedTeams;
-
-    @FXML
-    private ListView<String> teamsList;
-
-    @FXML
-    private ColorPicker colorPicker;
-
-
-    @FXML
-    private Label headline;
-
-    @FXML
-    void AddSelTeam(ActionEvent event) {
-
-    }
-
-    @FXML
-    void RemoveSelTeam(ActionEvent event) {
-
-    }
-
-    @FXML
-    public void interrupt(ActionEvent e) {
-        ((Node)e.getSource()).getScene().getWindow().hide();
-    }
-
-    @FXML
-    void newEmployee(ActionEvent event) {
-        Color color = colorPicker.getValue();
-        String str = String.format( "#%02X%02X%02X", (int)( color.getRed() * 255 ), (int)( color.getGreen() * 255 ), (int)( color.getBlue() * 255 ) );
-        AbsencePlanner.addEmployee(firstname.getText(), lastname.getText(), str);
-    }
-
-    @FXML
-    void deleteEmployee(ActionEvent event) {
-        if(edit) {
-            AbsencePlanner.deleteEmployee(employee.id);
-        }
-    }
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        ArrayList<String> teams = AbsencePlanner.getTeams();
-        if (this.edit) {
-            lastname.setText(employee.lastName);
-            firstname.setText(employee.firstName);
-            colorPicker.setValue(Color.valueOf(employee.favoriteColor));
-
-            ArrayList<String> currentTeams = AbsencePlanner.getTeamsOfEmployee(employee.id);
-            for (String s : currentTeams) {
-                teamsList.getSelectionModel().select(s);
+            while (resultSet.next()) {
+                String firstName = resultSet.getString("first_name");
+                String lastName = resultSet.getString("last_name");
+                employeeNames.add(firstName + " " + lastName);
             }
-            headline.setText("Mitarbeiter verwalten");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-            if (teams != null){
-                teamsList.getItems().addAll(teams);
-            }
-            teamsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            teamsList.getSelectionModel().selectedItemProperty().addListener(this::selectionChanged);
+        return employeeNames;
     }
 
-    private void selectionChanged(ObservableValue<? extends String> observable, String oldV, String newV){
-        ObservableList<String> selectedItems = teamsList.getSelectionModel().getSelectedItems();
-        String selectedItem = (selectedItems.isEmpty())? "Kein Team ausgewählt" : selectedItems.toString();
-        selectedTeams.setText(selectedItem);
+    //getUserColor
+    public String getUserColor(String name) {
+        String[] names = name.split(" ", 2); // Split into first name and the rest
+        String firstName = names[0];
+        String lastName = names.length > 1 ? names[1] : "";
+
+        String userColor = ""; // Default to 0 (not found)
+        String query = "SELECT favorite_color FROM employees WHERE first_name = ? AND last_name = ?;";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, firstName);
+            preparedStatement.setString(2, lastName);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    userColor = resultSet.getString("favorite_color");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("An error occurred while fetching the user ID: " + e.getMessage());
+        }
+
+        return userColor;
     }
+
+    public int getUserId(String name) {
+        String[] names = name.split(" ", 2); // Split into first name and the rest
+        String firstName = names[0];
+        String lastName = names.length > 1 ? names[1] : "";
+
+        int userId = 0; // Default to 0 (not found)
+        String query = "SELECT id FROM employees WHERE first_name = ? AND last_name = ?;";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, firstName);
+            preparedStatement.setString(2, lastName);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    userId = resultSet.getInt("id");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("An error occurred while fetching the user ID: " + e.getMessage());
+        }
+
+        return userId;
+    }
+
+
+    public List<Absence> getEmployeeAbsences(int employeeId) {
+        List<Absence> absences = new ArrayList<>();
+        String query = "SELECT * FROM absences WHERE employee_id = ?;";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, employeeId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    Absence absence = new Absence(
+                            resultSet.getInt("id"),
+                            resultSet.getInt("employee_id"),
+                            AbsenceType.valueOf(resultSet.getString("type")),
+                            resultSet.getString("start_date"),
+                            resultSet.getString("end_date"),
+                            resultSet.getInt("approved") != 0
+                    );
+
+                    absences.add(absence);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return absences;
+    }
+
 }

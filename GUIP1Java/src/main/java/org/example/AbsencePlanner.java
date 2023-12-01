@@ -8,8 +8,10 @@ import javafx.stage.Stage;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Random;
 
 public class AbsencePlanner extends Application {
     private static Team team;
@@ -38,18 +40,7 @@ public class AbsencePlanner extends Application {
     }
 
 
-    public static void main(String[] args) {
-        launch(args);
-        //Test
-        //Testgit
-        AbsencePlanner planner = new AbsencePlanner();
-        planner.initializeDatabase();
 
-        Connection con = SQLiteConnection.connect();
-
-        // Datenbankverbindung schließen
-        SQLiteConnection.disconnect(con);
-    }
     private static void initializeDatabase() {
         String createEmployeesTableSQL = """
                 CREATE TABLE IF NOT EXISTS employees (
@@ -70,19 +61,52 @@ public class AbsencePlanner extends Application {
                 FOREIGN KEY (employee_id) REFERENCES employees(id));
                 """;
 
-        try (PreparedStatement preparedStatement1 = connection.prepareStatement(createEmployeesTableSQL);
-             PreparedStatement preparedStatement2 = connection.prepareStatement(createAbsencesTableSQL)) {
-            preparedStatement1.execute();
-            preparedStatement2.execute();
-            System.out.println("Tabellen 'employees' und 'absences' erstellt.");
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(createEmployeesTableSQL);
+            statement.execute(createAbsencesTableSQL);
+            System.out.println("Tables 'employees' and 'absences' created.");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
     }
 
-    public static void updateEmployee(String firstName, String lastName, String favoriteColor){
-        //TODO
+
+    public void addAbsencesForAllEmployees() {
+        AbsenceType[] absenceTypes = AbsenceType.values();
+        Random random = new Random();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String query = "SELECT id FROM employees;";
+
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+
+            while (resultSet.next()) {
+                int employeeId = resultSet.getInt("id");
+
+                // Add 5 random absences for the employee
+                for (int i = 0; i < 5; i++) {
+                    AbsenceType randomType = absenceTypes[random.nextInt(absenceTypes.length)];
+                    LocalDate randomStartDate = getRandomStartDate();
+                    // Random duration from 1 to 4 days
+                    LocalDate randomEndDate = randomStartDate.plusDays(random.nextInt(4) + 1);
+                    requestAbsence(employeeId, randomType, randomStartDate.format(formatter), randomEndDate.format(formatter));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error adding absences for all employees: " + e.getMessage());
+        }
     }
+
+    private LocalDate getRandomStartDate() {
+        Random random = new Random();
+        // Randomly choose a month (11 for December, 0 for January)
+        int month = random.nextBoolean() ? 11 : 0;
+        // Random day in December 2023 or January 2024
+        int day = month == 11 ? random.nextInt(31) + 1 : random.nextInt(31) + 1;
+        int year = month == 11 ? 2023 : 2024;
+        return LocalDate.of(year, month + 1, day);
+    }
+
     public static void addEmployee(String firstName, String lastName, String favoriteColor) {
         String insertEmployeeSQL = "INSERT INTO employees (first_name, last_name, favorite_color) VALUES (?, ?, ?);";
 
@@ -111,24 +135,22 @@ public class AbsencePlanner extends Application {
         }
     }
 
-    public static void requestAbsence(String employeeName, AbsenceType type, String startDate, String endDate) {
-        Employee employee = getEmployeeByName(employeeName);
-        if (employee != null) {
-            String insertAbsenceSQL = "INSERT INTO absences (employee_id, type, start_date, end_date, approved) VALUES (?, ?, ?, ?, 0);";
+    public void requestAbsence(int employeeId, AbsenceType type, String startDate, String endDate) {
+        String insertAbsenceSQL = "INSERT INTO absences (employee_id, type, start_date, end_date, approved) VALUES (?, ?, ?, ?, 0);";
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(insertAbsenceSQL)) {
-                preparedStatement.setInt(1, employee.id);
-                preparedStatement.setString(2, type.toString());
-                preparedStatement.setString(3, startDate);
-                preparedStatement.setString(4, endDate);
-                preparedStatement.executeUpdate();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertAbsenceSQL)) {
+            preparedStatement.setInt(1, employeeId);
+            preparedStatement.setString(2, type.name());
+            preparedStatement.setString(3, startDate);
+            preparedStatement.setString(4, endDate);
+            preparedStatement.executeUpdate();
 
-                //System.out.println("Abwesenheitsantrag für '" + employeeName + "' erstellt.");
+                System.out.println("Abwesenheitsantrag für '" + employeeId + "' erstellt.");
             } catch (SQLException e) {
                 System.err.println(e.getMessage());
             }
         }
-    }
+
 
     private static Employee getEmployeeByName(String employeeName) {
         return new Employee(); //TODO auf ID ändern, I guess?
@@ -270,55 +292,11 @@ public class AbsencePlanner extends Application {
         return null;
     }
 
-    public static ArrayList<String> getTeams(){
-        return null; //TODO
-    }
-    public static void deleteTeam(String name){
-        //TODO
-    }
-    public static void addTeam(String name) {
-        //TODO
-    }
+    public static void main(String[] args) {
+        AbsencePlanner planner = new AbsencePlanner();
 
-    public static ArrayList<AbsenceType> getAllAbsenceTypes() {
-        //TODO
-        return null;
+        planner.addAbsencesForAllEmployees();
+
+        SQLiteConnection.disconnect(planner.connection);
     }
-
-    public static void addAbsenceType(String type) {
-        //TODO
-    }
-
-    public static void deleteAbsenceType(AbsenceType type) {
-        //TODO
-    }
-
-    public static ArrayList<Employee> getAllEmployees() {
-        //TODO
-        return null;
-    }
-
-    public static LocalDate getHighetDate() {
-        return null; //TODO
-    }
-
-
-    //TODO Bitte die Dates als LocalDate-Objekte ausgeben, wenn möglich; Heißt, in der Klasse Absence und die returns ändern.
-    // https://stackoverflow.com/questions/20165564/calculating-days-between-two-dates-with-java
-
-    public static ArrayList<Map<Team, Integer>> getAbsancesPerTeamByDay(LocalDate date){
-        return null;
-        //TODO
-    }
-    public static ArrayList<Map<Employee, Absence>> getAbsancesPerEmployeeByDay(LocalDate date){
-        return null;
-        //TODO Priorität! Wäre doch sorum am einfachsten für mich, heißt, alle Absances, die über den tag gehen werden mit dem yugehörigen MA ausgegeben
-    }
-
-    public static ArrayList<String> getTeamsOfEmployee(int id){
-        return null;
-        //TODO
-    }
-
-    //TODO Bitte ein paar Testdaten einfügen!
 }
