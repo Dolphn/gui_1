@@ -23,6 +23,7 @@ import java.util.*;
 
 public class Controller implements Initializable {
 
+    public Button buttonNewAbsence;
     @FXML
     private AnchorPane anchor;
 
@@ -69,13 +70,15 @@ public class Controller implements Initializable {
         window.setTitle("Neuen Mitarbeiter anlegen");
         window.showAndWait();
     }
-    @FXML
-    public void newEmployee(ActionEvent e) {
 
-    }
     @FXML
-    public void ButtonNewAbsence(ActionEvent e) {
+    public void buttonNewAbsence(ActionEvent e) throws IOException {
+        Stage window = new Stage();
+        window.setScene(new Scene(FXMLLoader.load(getClass().getResource("/absences.fxml"))));
 
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle("Neuen Abwesenheit beantragen");
+        window.showAndWait();
     }
 
     @Override
@@ -102,6 +105,7 @@ public class Controller implements Initializable {
 
         for (long d = 0; d < countOfDays; d++) {
             LocalDate day = myDateObj.plusDays(d);
+            Map<Employee, Absence> absencesOfDay = AbsencePlanner.getAbsancesPerEmployeeByDay(day);
 
             VBox dateBox = new VBox();
             dateBox.setMaxWidth(width);
@@ -115,8 +119,21 @@ public class Controller implements Initializable {
 
             dateBox.getChildren().add(label);
 
+            // Per date: manage every employee
+            int i = 0;
             for (Employee e : emps) {
-                Button edit = new Button();
+                i ++;
+                Absence absence = absencesOfDay.get(e);
+                if (absence == null) {
+                    Label l = new Label("");
+                    l.maxHeight(height);
+                    l.minHeight(height);
+                    l.setMaxWidth(width);
+                    l.setMinWidth(width);
+                    if (i%2 == 0) l.setStyle("-fx-background-color: #cccccc;" );
+                    continue;
+                }
+                Button edit = new Button(absence.type.toString());
                 edit.minHeight(height);
                 edit.maxHeight(height);
                 edit.setMinWidth(30);
@@ -124,15 +141,15 @@ public class Controller implements Initializable {
                 edit.setOnAction(event -> {
                     Stage window = new Stage();
                     try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/newEmployee.fxml"));
-                        loader.setController(new EmployeeController(e, true));
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/absences.fxml"));
+                        loader.setController(new AbsenceController(absence, true));
                         window.setScene(new Scene(loader.load()));
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
 
                     window.initModality(Modality.APPLICATION_MODAL);
-                    window.setTitle("Mitarbeiter ändern");
+                    window.setTitle("Abwesenheit ändern");
                     window.showAndWait();
                 });
 
@@ -145,12 +162,16 @@ public class Controller implements Initializable {
         hBoxE.setMinWidth(200);
         vBoxEmployees.getChildren().add(hBoxE);
 
+        int i = 0;
         for (Employee e:emps) {
+            i++;
             HBox hBox = new HBox();
             hBox.maxHeight(height);
             hBox.minHeight(height);
             hBox.maxWidth(200);
             hBox.setMinWidth(200);
+            if (i%2 == 0) hBox.setStyle("-fx-background-color: #cccccc;" );
+
 
             Label lastname = new Label(e.lastName);
             Label firstname = new Label(e.firstName);
@@ -163,6 +184,9 @@ public class Controller implements Initializable {
             firstname.maxHeight(height);
             firstname.setMinWidth(85);
             firstname.setMaxWidth(85);
+            if (i%2 == 0) lastname.setStyle("-fx-background-color: #cccccc;" );
+            if (i%2 == 0) firstname.setStyle("-fx-background-color: #cccccc;" );
+
 
             Button edit = new Button("Edit");
             edit.minHeight(height);
@@ -183,6 +207,8 @@ public class Controller implements Initializable {
                 window.setTitle("Mitarbeiter ändern");
                 window.showAndWait();
             });
+            if (i%2 == 0) edit.setStyle("-fx-background-color: #cccccc;" );
+
             hBox.getChildren().addAll(lastname, firstname, edit);
             vBoxEmployees.getChildren().add(hBox);
         }

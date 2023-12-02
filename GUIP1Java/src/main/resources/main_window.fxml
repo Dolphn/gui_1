@@ -21,6 +21,7 @@
                         <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="418.0" prefWidth="942.0">
                            <children>
                               <VBox fx:id="vBoxEmployees" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="418.0" prefWidth="200.0" />
+                              <Separator orientation="VERTICAL" prefHeight="200.0" />
                               <HBox fx:id="hBoxAbsences" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="418.0" prefWidth="753.0" />
                            </children>
                         </HBox>
@@ -31,6 +32,7 @@
                         <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="165.0" prefWidth="942.0">
                            <children>
                               <VBox fx:id="vBoxTeams" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="166.0" prefWidth="200.0" />
+                              <Separator orientation="VERTICAL" prefHeight="200.0" />
                               <HBox fx:id="hBoxTeamDates" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="166.0" prefWidth="739.0" />
                            </children>
                         </HBox>
@@ -43,6 +45,7 @@
       <ToolBar prefHeight="40.0" prefWidth="946.0">
         <items>
           <Button mnemonicParsing="false" onAction="#ButtonNewEmployee" text="Mitarbeiter hinzufügen" />
+            <Button fx:id="buttonNewAbsence" mnemonicParsing="false" onAction="#buttonNewAbsence" text="Abwesenheit hinzufügen" />
         </items>
       </ToolBar>
    </children>

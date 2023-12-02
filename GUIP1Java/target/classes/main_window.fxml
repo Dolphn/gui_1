@@ -43,6 +43,7 @@
       <ToolBar prefHeight="40.0" prefWidth="946.0">
         <items>
           <Button mnemonicParsing="false" onAction="#ButtonNewEmployee" text="Mitarbeiter hinzufügen" />
+            <Button fx:id="buttonNewAbsence" mnemonicParsing="false" onAction="#buttonNewAbsence" text="Abwesenheit hinzufügen" />
         </items>
       </ToolBar>
    </children>

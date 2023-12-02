@@ -83,7 +83,9 @@ public class AbsencePlanner extends Application {
     public static void updateEmployee(String firstName, String lastName, String favoriteColor){
         //TODO
     }
+
     public static void addEmployee(String firstName, String lastName, String favoriteColor) {
+        //TODO Wie wählen wir das Team aus?
         String insertEmployeeSQL = "INSERT INTO employees (first_name, last_name, favorite_color) VALUES (?, ?, ?);";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(insertEmployeeSQL)) {
@@ -152,6 +154,7 @@ public class AbsencePlanner extends Application {
     }
 
     public static void deleteAbsence(String employeeName, int absenceIndex) {
+        //TODO Parameter des Typs Absance wäre gut, geht das??
         Employee employee = getEmployeeByName(employeeName);
         if (employee != null && absenceIndex >= 0 && absenceIndex < employee.absences.size()) {
             int absenceId = employee.absences.get(absenceIndex).id;
@@ -166,6 +169,10 @@ public class AbsencePlanner extends Application {
                 System.err.println(e.getMessage());
             }
         }
+    }
+
+    public static void updateAbsence(Absence absence){
+        //TODO
     }
 
     /*
@@ -269,6 +276,7 @@ public class AbsencePlanner extends Application {
         }
         return null;
     }
+    //TODO Methoden für die AbsenceTypes?? Brauchen wir das?
 
     public static ArrayList<String> getTeams(){
         return null; //TODO
@@ -280,7 +288,7 @@ public class AbsencePlanner extends Application {
         //TODO
     }
 
-    public static ArrayList<AbsenceType> getAllAbsenceTypes() {
+    public static ArrayList<String> getAllAbsenceTypes() {
         //TODO
         return null;
     }
@@ -310,7 +318,7 @@ public class AbsencePlanner extends Application {
         return null;
         //TODO
     }
-    public static ArrayList<Map<Employee, Absence>> getAbsancesPerEmployeeByDay(LocalDate date){
+    public static Map<Employee, Absence> getAbsancesPerEmployeeByDay(LocalDate date){
         return null;
         //TODO Priorität! Wäre doch sorum am einfachsten für mich, heißt, alle Absances, die über den tag gehen werden mit dem yugehörigen MA ausgegeben
     }
@@ -318,6 +326,10 @@ public class AbsencePlanner extends Application {
     public static ArrayList<String> getTeamsOfEmployee(int id){
         return null;
         //TODO
+    }
+
+    public static void deleteAbsence(Absence absence) {
+        //TODO Bitte implementieren, denke, das sollte ja mit der ID kein Problem sein, oder?
     }
 
     //TODO Bitte ein paar Testdaten einfügen!
