@@ -3,12 +3,11 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane id="anchor" fx:id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="946.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Controller">
    <children>
@@ -21,18 +20,8 @@
                      <content>
                         <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="418.0" prefWidth="942.0">
                            <children>
-                              <TableView fx:id="tableEmpoyees" maxHeight="1.7976931348623157E308" onSort="#employeesSorted" prefHeight="418.0" prefWidth="191.0">
-                                <columns>
-                                  <TableColumn fx:id="firstnameEmployees" editable="false" prefWidth="91.20000320672989" text="Nachname" />
-                                  <TableColumn fx:id="lastnameEmployees" editable="false" minWidth="0.0" prefWidth="84.79998779296875" text="Vorname" />
-                                    <TableColumn prefWidth="14.4000244140625" text="E" />
-                                </columns>
-                              </TableView>
-                              <TableView fx:id="tableDates" maxWidth="1.7976931348623157E308" prefHeight="418.0" prefWidth="746.0">
-                                <columns>
-                                  <TableColumn fx:id="today" editable="false" prefWidth="75.0" sortable="false" text="C1" />
-                                </columns>
-                              </TableView>
+                              <VBox fx:id="vBoxEmployees" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="418.0" prefWidth="200.0" />
+                              <HBox fx:id="hBoxAbsences" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="418.0" prefWidth="753.0" />
                            </children>
                         </HBox>
                      </content>
@@ -41,16 +30,8 @@
                      <content>
                         <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="165.0" prefWidth="942.0">
                            <children>
-                              <TableView fx:id="tableTeams" maxHeight="1.7976931348623157E308" onSort="#teamsSorted" prefHeight="166.0" prefWidth="202.0">
-                                 <columns>
-                                    <TableColumn fx:id="nameTeam" editable="false" prefWidth="178.39998794794082" text="Nachname" />
-                                 </columns>
-                              </TableView>
-                              <TableView fx:id="datesTeams" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="252.0" prefWidth="762.0">
-                                 <columns>
-                                    <TableColumn fx:id="todayTeams" editable="false" prefWidth="75.0" sortable="false" />
-                                 </columns>
-                              </TableView>
+                              <VBox fx:id="vBoxTeams" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="166.0" prefWidth="200.0" />
+                              <HBox fx:id="hBoxTeamDates" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="166.0" prefWidth="739.0" />
                            </children>
                         </HBox>
                      </content>

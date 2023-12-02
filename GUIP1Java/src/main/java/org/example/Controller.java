@@ -27,7 +27,7 @@ public class Controller implements Initializable {
     private AnchorPane anchor;
 
     @FXML
-    private HBox hBoxAbseces;
+    private HBox hBoxAbsences;
 
     @FXML
     private HBox hBoxEmployees;
