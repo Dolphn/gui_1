@@ -85,10 +85,6 @@ public class Controller implements Initializable {
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
         ArrayList<Employee> emps = AbsencePlanner.getAllEmployees();
-        HashMap<Employee, ArrayList<Absence>> allAbsences = new HashMap<>();
-        for (Employee e: emps) {
-            allAbsences.put(e, AbsencePlanner.getAllAbsencesByEmployeeId(e.id));
-        }
 
         Collections.sort(emps, new Comparator<Employee>() {
             @Override
@@ -97,10 +93,12 @@ public class Controller implements Initializable {
             }
         });
 
+        long countOfDays = 20;
         LocalDate myDateObj = LocalDate.now();
-        LocalDate highest = AbsencePlanner.getHighetDate();
-        long countOfDays = Duration.between(myDateObj, highest).toDays();
-        String formattedDate = myDateObj.format(myFormatObj);
+        if (AbsencePlanner.getHighestDate() != null) {
+            LocalDate highest = AbsencePlanner.getHighestDate();
+            countOfDays = Duration.between(myDateObj, highest).toDays();
+        }
 
         for (long d = 0; d < countOfDays; d++) {
             LocalDate day = myDateObj.plusDays(d);
@@ -117,9 +115,7 @@ public class Controller implements Initializable {
 
             dateBox.getChildren().add(label);
 
-            List<_> absences = AbsencePlanner.getAllAbsencesByEmployeeId()
             for (Employee e : emps) {
-                if ()
                 Button edit = new Button();
                 edit.minHeight(height);
                 edit.maxHeight(height);

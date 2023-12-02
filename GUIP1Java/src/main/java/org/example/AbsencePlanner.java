@@ -295,10 +295,10 @@ public class AbsencePlanner extends Application {
 
     public static ArrayList<Employee> getAllEmployees() {
         //TODO
-        return null;
+        return new ArrayList<>();
     }
 
-    public static LocalDate getHighetDate() {
+    public static LocalDate getHighestDate() {
         return null; //TODO
     }
 
