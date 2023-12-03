@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -29,6 +30,9 @@ public class Controller implements Initializable {
 
     @FXML
     private HBox hBoxAbsences;
+
+    @FXML
+    private Pane paneInscroll;
 
     @FXML
     private HBox hBoxEmployees;
@@ -83,8 +87,9 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         int height = 18;
-        int width = 60;
+        int width = 80;
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         HashMap<String, Integer> teamsAbsences = new HashMap<>();
 
@@ -104,7 +109,10 @@ public class Controller implements Initializable {
             countOfDays = Duration.between(myDateObj, highest).toDays();
         }
 
+        //
+
         for (long d = 0; d < countOfDays; d++) {
+
             ArrayList<String> teams = AbsencePlanner.getTeams();
             for (String team:teams) {
                 teamsAbsences.put(team, 0);
@@ -119,7 +127,7 @@ public class Controller implements Initializable {
 
             Label label = new Label(day.format(myFormatObj));
             setSize(width, height, label);
-
+            label.setStyle("-fx-font-weight: bold");
             dateBox.getChildren().add(label);
 
             // Per date: manage every employee
@@ -165,8 +173,8 @@ public class Controller implements Initializable {
 
 
             VBox teamsDates = new VBox();
-            teamsDates.setMaxWidth(width);
-            teamsDates.setMaxWidth(width);
+            teamsDates.setMinWidth(width);
+            teamsDates.setMinWidth(width);
             for (String team:teams) {
                 Label label1 = new Label(teamsAbsences.get(team).toString());
                 if (i%2 == 0) label1.setStyle("-fx-background-color: #cccccc;" );
@@ -262,7 +270,8 @@ public class Controller implements Initializable {
             vBoxTeams.getChildren().add(hBox);
         }
 
-
+       scrollPaneUsers.setFitToWidth(true);
+        scrollPaneTeams.setFitToWidth(true);
 
     }
 

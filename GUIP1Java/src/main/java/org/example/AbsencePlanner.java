@@ -279,7 +279,9 @@ public class AbsencePlanner extends Application {
     //TODO Methoden für die AbsenceTypes?? Brauchen wir das?
 
     public static ArrayList<String> getTeams(){
-        return new ArrayList<>(); //TODO
+        ArrayList<String> list = new ArrayList<>();
+        list.add("Test");
+        return list; //TODO
     }
     public static void deleteTeam(String name){
         //TODO
