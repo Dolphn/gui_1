@@ -314,10 +314,6 @@ public class AbsencePlanner extends Application {
     //TODO Bitte die Dates als LocalDate-Objekte ausgeben, wenn möglich; Heißt, in der Klasse Absence und die returns ändern.
     // https://stackoverflow.com/questions/20165564/calculating-days-between-two-dates-with-java
 
-    public static ArrayList<Map<Team, Integer>> getAbsancesPerTeamByDay(LocalDate date){
-        return null;
-        //TODO
-    }
     public static Map<Employee, Absence> getAbsancesPerEmployeeByDay(LocalDate date){
         return null;
         //TODO Priorität! Wäre doch sorum am einfachsten für mich, heißt, alle Absances, die über den tag gehen werden mit dem yugehörigen MA ausgegeben

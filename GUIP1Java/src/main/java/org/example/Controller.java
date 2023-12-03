@@ -86,6 +86,7 @@ public class Controller implements Initializable {
         int height = 18;
         int width = 60;
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        HashMap<String, Integer> teamsAbsences = new HashMap<>();
 
         ArrayList<Employee> emps = AbsencePlanner.getAllEmployees();
 
@@ -104,6 +105,11 @@ public class Controller implements Initializable {
         }
 
         for (long d = 0; d < countOfDays; d++) {
+            ArrayList<String> teams = AbsencePlanner.getTeams();
+            for (String team:teams) {
+                teamsAbsences.put(team, 0);
+            }
+
             LocalDate day = myDateObj.plusDays(d);
             Map<Employee, Absence> absencesOfDay = AbsencePlanner.getAbsancesPerEmployeeByDay(day);
 
@@ -112,32 +118,29 @@ public class Controller implements Initializable {
             dateBox.setMinWidth(width);
 
             Label label = new Label(day.format(myFormatObj));
-            label.maxHeight(height);
-            label.minHeight(height);
-            label.setMaxWidth(width);
-            label.setMinWidth(width);
+            setSize(width, height, label);
 
             dateBox.getChildren().add(label);
 
             // Per date: manage every employee
             int i = 0;
             for (Employee e : emps) {
+                //TODO Feiertage
                 i ++;
                 Absence absence = absencesOfDay.get(e);
                 if (absence == null) {
                     Label l = new Label("");
-                    l.maxHeight(height);
-                    l.minHeight(height);
-                    l.setMaxWidth(width);
-                    l.setMinWidth(width);
+                    setSize(width, height, l);
                     if (i%2 == 0) l.setStyle("-fx-background-color: #cccccc;" );
+                    dateBox.getChildren().add(l);
                     continue;
                 }
+                for (String t: AbsencePlanner.getTeamsOfEmployee(e.id) ) {
+                    Integer in = teamsAbsences.get(t);
+                    teamsAbsences.replace(t, in + 1);
+                }
                 Button edit = new Button(absence.type.toString());
-                edit.minHeight(height);
-                edit.maxHeight(height);
-                edit.setMinWidth(30);
-                edit.setMaxWidth(30);
+                setSize(30, height, edit);
                 edit.setOnAction(event -> {
                     Stage window = new Stage();
                     try {
@@ -152,47 +155,50 @@ public class Controller implements Initializable {
                     window.setTitle("Abwesenheit ändern");
                     window.showAndWait();
                 });
+                String color =  "-fx-background-color:" + e.favoriteColor + ";";
+                edit.setStyle(color);
+                dateBox.getChildren().add(edit);
 
             }
+            hBoxAbsences.getChildren().add(dateBox);
+            // Team-Calendar
+
+
+            VBox teamsDates = new VBox();
+            teamsDates.setMaxWidth(width);
+            teamsDates.setMaxWidth(width);
+            for (String team:teams) {
+                Label label1 = new Label(teamsAbsences.get(team).toString());
+                if (i%2 == 0) label1.setStyle("-fx-background-color: #cccccc;" );
+                setSize(width, height, label1);
+            }
+            hBoxTeamDates.getChildren().add(vBoxTeams);
+
+
+
+
+
         }
-        HBox hBoxE = new HBox();
-        hBoxE.maxHeight(height);
-        hBoxE.minHeight(height);
-        hBoxE.maxWidth(200);
-        hBoxE.setMinWidth(200);
-        vBoxEmployees.getChildren().add(hBoxE);
 
         int i = 0;
         for (Employee e:emps) {
             i++;
             HBox hBox = new HBox();
-            hBox.maxHeight(height);
-            hBox.minHeight(height);
-            hBox.maxWidth(200);
-            hBox.setMinWidth(200);
+            setSize(200, height, hBox);
             if (i%2 == 0) hBox.setStyle("-fx-background-color: #cccccc;" );
 
 
             Label lastname = new Label(e.lastName);
             Label firstname = new Label(e.firstName);
 
-            lastname.minHeight(height);
-            lastname.maxHeight(height);
-            lastname.setMinWidth(85);
-            lastname.setMaxWidth(85);
-            firstname.minHeight(height);
-            firstname.maxHeight(height);
-            firstname.setMinWidth(85);
-            firstname.setMaxWidth(85);
+            setSize(85, height, lastname);
+            setSize(85, height, firstname);
             if (i%2 == 0) lastname.setStyle("-fx-background-color: #cccccc;" );
             if (i%2 == 0) firstname.setStyle("-fx-background-color: #cccccc;" );
 
 
             Button edit = new Button("Edit");
-            edit.minHeight(height);
-            edit.maxHeight(height);
-            edit.setMinWidth(30);
-            edit.setMaxWidth(30);
+            setSize(30, height, edit);
             edit.setOnAction(event -> {
                 Stage window = new Stage();
                 try {
@@ -212,5 +218,57 @@ public class Controller implements Initializable {
             hBox.getChildren().addAll(lastname, firstname, edit);
             vBoxEmployees.getChildren().add(hBox);
         }
+
+
+        //
+        // Teams
+        //
+
+
+
+        i = 0;
+        for (String team:AbsencePlanner.getTeams()) {
+            i++;
+            HBox hBox = new HBox();
+            setSize(200, height, hBox);
+            if (i%2 == 0) hBox.setStyle("-fx-background-color: #cccccc;" );
+
+
+            Label teamL = new Label(team);
+
+            setSize(170, height, teamL);
+            if (i%2 == 0) teamL.setStyle("-fx-background-color: #cccccc;" );
+
+            Button edit = new Button("Edit");
+            setSize(30, height, edit);
+            edit.setOnAction(event -> {
+                Stage window = new Stage();
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/teams.fxml"));
+                    //TODO loader.setController(new EmployeeController(e, true));
+                    window.setScene(new Scene(loader.load()));
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                window.initModality(Modality.APPLICATION_MODAL);
+                window.setTitle("Team ändern");
+                window.showAndWait();
+            });
+            if (i%2 == 0) edit.setStyle("-fx-background-color: #cccccc;" );
+
+            hBox.getChildren().addAll(teamL, edit);
+            vBoxTeams.getChildren().add(hBox);
+        }
+
+
+
+    }
+
+    private void setSize(int width, int height, Node node){
+        node.minHeight(height);
+        node.maxHeight(height);
+        node.minHeight(width);
+        node.maxWidth(width);
     }
 }
