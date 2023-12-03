@@ -10,6 +10,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class AbsencePlanner extends Application {
     private static Team team;
@@ -43,10 +44,10 @@ public class AbsencePlanner extends Application {
         //Test
         //Testgit
         AbsencePlanner planner = new AbsencePlanner();
-        planner.initializeDatabase();
+
 
         Connection con = SQLiteConnection.connect();
-
+        planner.initializeDatabase();
         // Datenbankverbindung schließen
         SQLiteConnection.disconnect(con);
     }
@@ -305,7 +306,7 @@ public class AbsencePlanner extends Application {
     }
 
     public static void addAbsenceType(String type) {
-        //TODO jede Absence hat einen type und der ist unveraenderliche!
+        //TODO jede Absence hat einen type und der ist unveraenderliche! Oder meinst du, dass man dynamisch AbsenceTypes erstellen/loeschen kann?
     }
 
     public static void deleteAbsenceType(AbsenceType type) {
@@ -337,16 +338,23 @@ public class AbsencePlanner extends Application {
     }
 
     public static LocalDate getHighestDate() {
-        return null; //TODO
+        return null; //TODO was soll diese Methode tun?
     }
 
 
-    //TODO Bitte die Dates als LocalDate-Objekte ausgeben, wenn möglich; Heißt, in der Klasse Absence und die returns ändern.
+
     // https://stackoverflow.com/questions/20165564/calculating-days-between-two-dates-with-java
 
-    public static Map<Employee, Absence> getAbsancesPerEmployeeByDay(LocalDate date){
-        return null;
-        //TODO Priorität! Wäre doch sorum am einfachsten für mich, heißt, alle Absances, die über den tag gehen werden mit dem yugehörigen MA ausgegeben
+    public static Map<Employee, Absence> getAbsencesPerEmployeeByDay(LocalDate date){
+        Map<Employee, Absence> toDayAbsences = new TreeMap<>();
+        for(Employee e:getAllEmployees()){
+            for(Absence a: e.absences){
+                if((a.getStartDate().isBefore(date) && a.getEndDate().isAfter(date)) || a.getStartDate().isEqual(date) || a.getEndDate().isEqual(date)){
+                    toDayAbsences.put(e,a);
+                }
+            }
+        }
+        return toDayAbsences;
     }
 
     public static ArrayList<String> getTeamsOfEmployee(int id){
@@ -356,7 +364,40 @@ public class AbsencePlanner extends Application {
 
     public static void deleteAbsence(Absence absence) {
         //TODO Bitte implementieren, denke, das sollte ja mit der ID kein Problem sein, oder?
+        String deletAbsenceSQL = "DELETE FROM absences WHERE id = ?;";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(deletAbsenceSQL)){
+            preparedStatement.setInt(1,absence.id);
+            preparedStatement.executeUpdate();
+        }catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
     }
 
-    //TODO Bitte ein paar Testdaten einfügen!
+    public static  void testDbErschaffen(){
+        //Datenbank erschaffen
+        initializeDatabase();
+        //Datenbankdaten loeschen
+        String clearEmployeesTableSQL = "TRUNCATE TABLE employees; ";
+
+        String clearAbsencesTableSQL = "TRUNCATE TABLE absences;";
+
+        try (PreparedStatement preparedStatement1 = connection.prepareStatement(clearEmployeesTableSQL);
+             PreparedStatement preparedStatement2 = connection.prepareStatement(clearAbsencesTableSQL)) {
+            preparedStatement1.execute();
+            preparedStatement2.execute();
+            System.out.println("Tabellen 'employees' und 'absences' geleert.");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        //Datenbank füllen
+
+        addEmployee("Bruno","Bauersfeld","#00CED1");
+        addEmployee("Daniel","Deiters","#1874CD");
+        addEmployee("Ruben","Reiter","#00BFFF");
+        requestAbsence("Bruno Bauersfeld",AbsenceType.SICKNESS,"01-01-2024","05-01-2024");
+        requestAbsence("Daniel Deiters",AbsenceType.REMOTE_WORK,"02-01-2024","04-01-2024");
+        requestAbsence("Ruben Reiter",AbsenceType.SICKNESS,"01-02-2024","02-01-2024");
+        requestAbsence("Ruben Reiter",AbsenceType.TRAINING,"03-01-2024","10-01-2024");
+
+    }
 }
