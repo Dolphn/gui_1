@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="923bdeb0-1190-40ee-ae69-47a404ffd3df" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/GUIP1Java/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/absence_planner.db" beforeDir="false" afterPath="$PROJECT_DIR$/GUIP1Java/absence_planner.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/GUIP1Java/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/src/main/java/org/example/Absence.java" beforeDir="false" afterPath="$PROJECT_DIR$/GUIP1Java/src/main/java/org/example/Absence.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/src/main/java/org/example/AbsenceController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/src/main/java/org/example/AbsencePlanner.java" beforeDir="false" afterPath="$PROJECT_DIR$/GUIP1Java/src/main/java/org/example/AbsencePlanner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/src/main/java/org/example/AbsenceType.java" beforeDir="false" afterPath="$PROJECT_DIR$/GUIP1Java/src/main/java/org/example/AbsenceType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/src/main/java/org/example/Controller.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/src/main/java/org/example/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/GUIP1Java/src/main/java/org/example/Employee.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/src/main/java/org/example/EmployeeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/GUIP1Java/src/main/java/org/example/EmployeeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/src/main/java/org/example/SQLiteConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/GUIP1Java/src/main/java/org/example/SQLiteConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/src/main/java/org/example/Team.java" beforeDir="false" afterPath="$PROJECT_DIR$/GUIP1Java/src/main/java/org/example/Team.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/src/main/resources/absences.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/src/main/resources/main_window.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/src/main/resources/newEmployee.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/src/main/resources/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/target/classes/main_window.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/target/classes/newEmployee.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/target/classes/org/example/Absence.class" beforeDir="false" afterPath="$PROJECT_DIR$/GUIP1Java/target/classes/org/example/Absence.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/target/classes/org/example/AbsenceType.class" beforeDir="false" afterPath="$PROJECT_DIR$/GUIP1Java/target/classes/org/example/AbsenceType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/target/classes/org/example/Employee.class" beforeDir="false" afterPath="$PROJECT_DIR$/GUIP1Java/target/classes/org/example/Employee.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/target/classes/org/example/SQLiteConnection.class" beforeDir="false" afterPath="$PROJECT_DIR$/GUIP1Java/target/classes/org/example/SQLiteConnection.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/target/classes/org/example/Team.class" beforeDir="false" afterPath="$PROJECT_DIR$/GUIP1Java/target/classes/org/example/Team.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GUIP1Java/target/classes/style.css" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2YxLHC9w34FdB1jv0yI6loHU2RU" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/cyntiapola/Desktop/_Studium/_th_koeln/WS24/GUI/Praktikum/gui_1&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="923bdeb0-1190-40ee-ae69-47a404ffd3df" name="Changes" comment="" />
+      <created>1701462194155</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1701462194155</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

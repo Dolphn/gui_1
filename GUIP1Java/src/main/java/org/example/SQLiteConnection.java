@@ -11,9 +11,9 @@ class SQLiteConnection {
 
         try {
             connection = DriverManager.getConnection(url);
-            System.out.println("Verbindung zur SQLite-Datenbank hergestellt.");
+            System.out.println("Connection to SQLite database established.");
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            System.err.println("Connection error: " + e.getMessage());
         }
 
         return connection;
@@ -23,10 +23,10 @@ class SQLiteConnection {
         try {
             if (connection != null) {
                 connection.close();
-                System.out.println("Verbindung zur SQLite-Datenbank geschlossen.");
+                System.out.println("Connection to SQLite database closed.");
             }
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            System.err.println("Disconnection error: " + e.getMessage());
         }
     }
 }

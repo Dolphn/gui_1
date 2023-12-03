@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Employee {
-    int id; // Mitarbeiter-ID in der Datenbank
+    int id;
     String firstName;
     String lastName;
     String favoriteColor;
