@@ -171,8 +171,9 @@ public class Controller implements Initializable {
                 Label label1 = new Label(teamsAbsences.get(team).toString());
                 if (i%2 == 0) label1.setStyle("-fx-background-color: #cccccc;" );
                 setSize(width, height, label1);
+                teamsDates.getChildren().add(label1);
             }
-            hBoxTeamDates.getChildren().add(vBoxTeams);
+            hBoxTeamDates.getChildren().add(teamsDates);
 
 
 
