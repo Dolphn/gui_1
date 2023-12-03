@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="410.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.AbsenceController">
+<AnchorPane prefHeight="410.0" prefWidth="806.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.AbsenceController">
    <children>
-      <Label fx:id="headline" layoutX="180.0" layoutY="23.0" text="Abwesenheit ändern" textAlignment="CENTER">
+      <Label fx:id="headline" layoutX="284.0" layoutY="23.0" text="Abwesenheit ändern" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="27.0" />
          </font>
@@ -47,5 +47,16 @@
       <DatePicker fx:id="datePickerStart" layoutX="48.0" layoutY="101.0" prefHeight="26.0" prefWidth="260.0" showWeekNumbers="true" />
       <DatePicker fx:id="datePickerEnd" layoutX="48.0" layoutY="157.0" prefHeight="26.0" prefWidth="260.0" showWeekNumbers="true" />
       <CheckBox fx:id="approved" layoutX="48.0" layoutY="222.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="92.0" text="Genehmigt" />
+      <ScrollPane hbarPolicy="NEVER" layoutX="586.0" layoutY="139.0">
+         <content>
+            <ListView fx:id="employeesList" prefHeight="230.0" prefWidth="200.0" />
+         </content>
+      </ScrollPane>
+      <Label fx:id="selectedEmployee" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="591.0" layoutY="377.0" prefHeight="18.0" prefWidth="200.0" textAlignment="RIGHT" textOverrun="CLIP" wrapText="true" />
+      <Label layoutX="641.0" layoutY="113.0" text="Mitarbeiter" textAlignment="CENTER">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

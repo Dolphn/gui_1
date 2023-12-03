@@ -82,6 +82,7 @@ public class AbsencePlanner extends Application {
 
     public static void updateEmployee(String firstName, String lastName, String favoriteColor){
         //TODO
+        //wird nicht benötig!Oder?
     }
 
     public static void addEmployee(String firstName, String lastName, String favoriteColor) {
@@ -134,6 +135,7 @@ public class AbsencePlanner extends Application {
 
     private static Employee getEmployeeByName(String employeeName) {
         return new Employee(); //TODO auf ID ändern, I guess?
+        //es gibt die Methode getEmployeeById!
     }
 
     public static void approveAbsence(int id, int absenceIndex){
@@ -153,8 +155,18 @@ public class AbsencePlanner extends Application {
         }
     }
 
-    public static void deleteAbsence(String employeeName, int absenceIndex) {
-        //TODO Parameter des Typs Absance wäre gut, geht das??
+    public static void deletAbsence(int id,AbsenceType type){
+        Employee employee = getEmployeeByid(id);
+        for(Absence a:employee.absences){
+            if(a.type == type){
+                employee.absences.remove(a);
+                return;//ToDo oder sollen alle Absencesdeleted werden? Oder muss noch spezifiziert werden, welche genau, es falls mehrere vom selben typen gibt? AbsenceId?
+            }
+        }
+    }
+
+    /*public static void deleteAbsence(String employeeName, int absenceIndex) {
+        //TO DO Parameter des Typs Absance wäre gut, geht das??
         Employee employee = getEmployeeByName(employeeName);
         if (employee != null && absenceIndex >= 0 && absenceIndex < employee.absences.size()) {
             int absenceId = employee.absences.get(absenceIndex).id;
@@ -169,10 +181,10 @@ public class AbsencePlanner extends Application {
                 System.err.println(e.getMessage());
             }
         }
-    }
+    }*/
 
     public static void updateAbsence(Absence absence){
-        //TODO
+        //TODO ich glaube wir brauchen keien Updates!
     }
 
     /*
@@ -249,7 +261,6 @@ public class AbsencePlanner extends Application {
 
 
     private static Employee getEmployeeByid(int id) {
-
         //neuer versuch
         Employee employee = new Employee();
         //String getEmployeeIdSQL = "SELECT id FROM employees WHERE first_name="+first_name+" AND last_name="+last_name+";";
@@ -276,7 +287,7 @@ public class AbsencePlanner extends Application {
         }
         return null;
     }
-    //TODO Methoden für die AbsenceTypes?? Brauchen wir das?
+    //TODO Methoden für die AbsenceTypes?? Brauchen wir das? Ne
 
     public static ArrayList<String> getTeams(){
         return null; //TODO
@@ -289,12 +300,12 @@ public class AbsencePlanner extends Application {
     }
 
     public static ArrayList<String> getAllAbsenceTypes() {
-        //TODO
+        //TODO was genau soll diese Methode machen?
         return null;
     }
 
     public static void addAbsenceType(String type) {
-        //TODO
+        //TODO jede Absence hat einen type und der ist unveraenderliche!
     }
 
     public static void deleteAbsenceType(AbsenceType type) {
@@ -302,8 +313,27 @@ public class AbsencePlanner extends Application {
     }
 
     public static ArrayList<Employee> getAllEmployees() {
-        //TODO
-        return new ArrayList<>();
+        ArrayList<Employee> employees = new ArrayList<>();
+
+        String getEmployeeIdSQL = "SELECT * FROM employees;";
+
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(getEmployeeIdSQL);
+            while (resultSet.next()) {
+                Employee employee = new Employee();
+                employee.id = resultSet.getInt("id");
+                employee.firstName = resultSet.getString("first_name");
+                employee.lastName = resultSet.getString("last_name");
+                employee.favoriteColor = resultSet.getString("favorite_color");
+                employee.absences = getAllAbsencesByEmployeeId(employee.id);
+                employees.add(employee);
+            }
+            resultSet.close();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return employees;
     }
 
     public static LocalDate getHighestDate() {
