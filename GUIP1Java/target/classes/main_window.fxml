@@ -16,7 +16,7 @@
             <Pane fx:id="paneInscroll" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="582.0" prefWidth="940.0">
                <children>
                   <Separator layoutY="419.0" maxWidth="1.7976931348623157E308" prefHeight="0.0" prefWidth="942.0" styleClass="seperator" />
-                  <ScrollPane fx:id="scrollPaneUsers" disable="true" fitToWidth="true" maxWidth="1.7976931348623157E308" prefHeight="420.0" prefWidth="940.0">
+                  <ScrollPane fx:id="scrollPaneUsers" fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="940.0">
                      <content>
                         <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="418.0" prefWidth="942.0">
                            <children>
@@ -27,7 +27,7 @@
                         </HBox>
                      </content>
                   </ScrollPane>
-                  <ScrollPane fx:id="scrollPaneTeams" hbarPolicy="NEVER" layoutY="428.0" prefHeight="163.0" prefWidth="942.0">
+                  <ScrollPane fx:id="scrollPaneTeams" hbarPolicy="NEVER" layoutY="428.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="163.0" prefWidth="942.0">
                      <content>
                         <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="165.0" prefWidth="942.0">
                            <children>

@@ -281,6 +281,7 @@ public class AbsencePlanner extends Application {
     public static ArrayList<String> getTeams(){
         ArrayList<String> list = new ArrayList<>();
         list.add("Test");
+        list.add("Rosso");
         return list; //TODO
     }
     public static void deleteTeam(String name){

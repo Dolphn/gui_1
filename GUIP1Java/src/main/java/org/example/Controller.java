@@ -4,16 +4,20 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.time.Duration;
@@ -127,6 +131,7 @@ public class Controller implements Initializable {
 
             Label label = new Label(day.format(myFormatObj));
             setSize(width, height, label);
+            label.setAlignment(Pos.CENTER);
             label.setStyle("-fx-font-weight: bold");
             dateBox.getChildren().add(label);
 
@@ -134,13 +139,13 @@ public class Controller implements Initializable {
             int i = 0;
             for (Employee e : emps) {
                 //TODO Feiertage
-                i ++;
                 Absence absence = absencesOfDay.get(e);
                 if (absence == null) {
                     Label l = new Label("");
                     setSize(width, height, l);
                     if (i%2 == 0) l.setStyle("-fx-background-color: #cccccc;" );
                     dateBox.getChildren().add(l);
+                    i++;
                     continue;
                 }
                 for (String t: AbsencePlanner.getTeamsOfEmployee(e.id) ) {
@@ -163,10 +168,11 @@ public class Controller implements Initializable {
                     window.setTitle("Abwesenheit ändern");
                     window.showAndWait();
                 });
-                String color =  "-fx-background-color:" + e.favoriteColor + ";";
+                String color =  "-fx-background-color: " + e.favoriteColor + ";";
                 edit.setStyle(color);
                 dateBox.getChildren().add(edit);
 
+                i ++;
             }
             hBoxAbsences.getChildren().add(dateBox);
             // Team-Calendar
@@ -175,18 +181,22 @@ public class Controller implements Initializable {
             VBox teamsDates = new VBox();
             teamsDates.setMinWidth(width);
             teamsDates.setMinWidth(width);
+            i = 0;
             for (String team:teams) {
                 Label label1 = new Label(teamsAbsences.get(team).toString());
                 if (i%2 == 0) label1.setStyle("-fx-background-color: #cccccc;" );
                 setSize(width, height, label1);
+                label1.setMinWidth(width);
+                label1.setAlignment(Pos.CENTER);
                 teamsDates.getChildren().add(label1);
+                i++;
             }
             hBoxTeamDates.getChildren().add(teamsDates);
 
 
 
 
-
+            //End of Day loop
         }
 
         int i = 0;
@@ -235,21 +245,20 @@ public class Controller implements Initializable {
 
 
 
-        i = 0;
+        int j = 0;
         for (String team:AbsencePlanner.getTeams()) {
-            i++;
             HBox hBox = new HBox();
             setSize(200, height, hBox);
-            if (i%2 == 0) hBox.setStyle("-fx-background-color: #cccccc;" );
+            if (j%2 == 0) hBox.setStyle("-fx-background-color: #cccccc;" );
 
 
             Label teamL = new Label(team);
 
             setSize(170, height, teamL);
-            if (i%2 == 0) teamL.setStyle("-fx-background-color: #cccccc;" );
+            if (j%2 == 0) teamL.setStyle("-fx-background-color: #cccccc;" );
 
             Button edit = new Button("Edit");
-            setSize(30, height, edit);
+            setSize(20, height - 2, edit);
             edit.setOnAction(event -> {
                 Stage window = new Stage();
                 try {
@@ -264,21 +273,44 @@ public class Controller implements Initializable {
                 window.setTitle("Team ändern");
                 window.showAndWait();
             });
-            if (i%2 == 0) edit.setStyle("-fx-background-color: #cccccc;" );
+            if (j%2 == 0) hBox.setStyle("-fx-background-color: #cccccc;" );
+
 
             hBox.getChildren().addAll(teamL, edit);
             vBoxTeams.getChildren().add(hBox);
+            j++;
         }
 
-       scrollPaneUsers.setFitToWidth(true);
-        scrollPaneTeams.setFitToWidth(true);
+        paneInscroll.setMinWidth(width * countOfDays + 205);
+        scrollPaneCalendar.setFitToWidth(true);
+        scrollPaneUsers.setFitToWidth(false);
+        scrollPaneTeams.setFitToWidth(false);
+        scrollPaneUsers.setMinWidth(width * countOfDays + 200);
+        scrollPaneTeams.setMinWidth(width * countOfDays + 200);
+        scrollPaneUsers.setMaxWidth(width * countOfDays + 200);
+        scrollPaneTeams.setMaxWidth(width * countOfDays + 200);
 
     }
 
-    private void setSize(int width, int height, Node node){
-        node.minHeight(height);
-        node.maxHeight(height);
-        node.minHeight(width);
-        node.maxWidth(width);
+    private void setSize(int width, int height, HBox node){
+        node.setMinHeight(height);
+        node.setMaxHeight(height);
+        node.setMinWidth(width);
+        node.setMaxWidth(width);
     }
+
+    private void setSize(int width, int height, Label node){
+        node.setMinHeight(height);
+        node.setMaxHeight(height);
+        node.setMinWidth(width);
+        node.setMaxWidth(width);
+    }
+
+    private void setSize(int width, int height, Button node){
+        node.setMinHeight(height);
+        node.setMaxHeight(height);
+        node.setMinWidth(width);
+        node.setMaxWidth(width);
+    }
+
 }
