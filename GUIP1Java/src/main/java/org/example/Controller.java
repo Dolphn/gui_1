@@ -28,6 +28,12 @@ import java.util.*;
 
 public class Controller implements Initializable {
 
+    private int sort = 0;
+    //0 Nachname aufsteigend
+    //1 Nachname ab
+    //2 Vorname auf
+    //3 Vorname ab
+
     public Button buttonNewAbsence;
     @FXML
     private AnchorPane anchor;
@@ -66,8 +72,26 @@ public class Controller implements Initializable {
 
     }
     @FXML
-    public void teamsSorted(ActionEvent e){
+    public void empsSortedLastnameAsc(ActionEvent e){
+        sort = 0;
+        initialize(null, null);
+    }
 
+    @FXML
+    public void empsSortedLastnameDesc(ActionEvent e){
+        sort = 1;
+        initialize(null, null);
+    }
+
+    @FXML
+    public void empsSortedFirstnameAsc(ActionEvent e){
+        sort = 2;
+        initialize(null, null);
+    }
+
+    public void empsSortedFirstnameDesc(ActionEvent e){
+        sort = 3;
+        initialize(null, null);
     }
     @FXML
     public void ButtonNewEmployee(ActionEvent e) throws IOException {
@@ -102,6 +126,16 @@ public class Controller implements Initializable {
         Collections.sort(emps, new Comparator<Employee>() {
             @Override
             public int compare(Employee o1, Employee o2) {
+                if (sort == 1){
+                    return o2.lastName.compareTo(o1.lastName);
+                }
+                if (sort == 2) {
+                    return o1.firstName.compareTo(o2.firstName);
+                }
+                if (sort == 3) {
+                    return o2.firstName.compareTo(o1.firstName);
+
+                }
                 return o1.lastName.compareTo(o2.lastName);
             }
         });
@@ -202,6 +236,30 @@ public class Controller implements Initializable {
         int i = 0;
         for (Employee e:emps) {
             i++;
+            if (i == 1){
+                HBox hBox = new HBox();
+                setSize(200, height, hBox);
+
+                Button lNA = new Button("Nachn. Auf");
+                setSize(30, height, lNA);
+                lNA.setOnAction(this::empsSortedLastnameAsc);
+
+                Button lND = new Button("Nachn. Ab");
+                setSize(30, height, lNA);
+                lNA.setOnAction(this::empsSortedLastnameDesc);
+
+                Button fNA = new Button("Vorn. Auf");
+                setSize(30, height, lNA);
+                lNA.setOnAction(this::empsSortedFirstnameAsc);
+
+                Button fND = new Button("Vorn. Ab");
+                setSize(30, height, lNA);
+                lNA.setOnAction(this::empsSortedFirstnameDesc);
+
+                hBox.getChildren().addAll(lNA, lND, fNA, fND);
+                vBoxEmployees.getChildren().add(hBox);
+                continue;
+            }
             HBox hBox = new HBox();
             setSize(200, height, hBox);
             if (i%2 == 0) hBox.setStyle("-fx-background-color: #cccccc;" );
