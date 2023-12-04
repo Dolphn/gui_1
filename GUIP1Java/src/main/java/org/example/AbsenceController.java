@@ -18,6 +18,7 @@ import java.time.LocalDate;
 
 public class AbsenceController implements Initializable {
 
+    ObservableList<String> sel;
     private Absence absence = null;
     private boolean edit = false;
     private String lastName;
@@ -107,7 +108,7 @@ public class AbsenceController implements Initializable {
         selectedType.setText(selectedItem);
         absenceType = AbsenceType.getAbscenceTypeByString(selectedItem);
 
-        ObservableList<String> sel = employeesList.getSelectionModel().getSelectedItems();
+        sel = employeesList.getSelectionModel().getSelectedItems();
         String selString = (sel.isEmpty())? "" : sel.toString();
         selectedEmployee.setText(selectedItem);
         String[] param = selectedItem.trim().split(",");

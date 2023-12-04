@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -27,6 +28,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Controller implements Initializable {
+
+    Map<String, String> holidays = new HashMap<>();
+    private void initHolidays(){
+        holidays.put("25.12.2023", "1. Weihnachtsfeiertag");
+        holidays.put("26.12.2023", "2. Weihnachtsfeiertag");
+        holidays.put("01.01.2024", "Neujahr");
+        holidays.put("08.12.2023", "Tag der Gürtelrose");
+
+//TODO
+    }
+
+
 
     private int sort = 0;
     //0 Nachname aufsteigend
@@ -115,6 +128,7 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        initHolidays();
 
         int height = 18;
         int width = 80;
@@ -169,10 +183,41 @@ public class Controller implements Initializable {
             label.setStyle("-fx-font-weight: bold");
             dateBox.getChildren().add(label);
 
+
+            if (holidays.containsKey(day.format(myFormatObj))) {
+                Label label1 = new Label(holidays.get(day.format(myFormatObj)));
+                setSize(500, width, label1);
+                label1.setAlignment(Pos.CENTER);
+                label1.setRotate(-90);
+                label1.setTranslateX(-213 );
+                label1.setTranslateY(210 );
+                label1.setStyle("-fx-background-color: #444444; -fx-text-fill: white; -fx-font-size: 26px;" );
+                dateBox.getChildren().add(label1);
+                hBoxAbsences.getChildren().add(dateBox);
+
+                VBox box = new VBox();
+                setSize(width, 200, box);
+                box.setStyle("-fx-background-color: #444444;" );
+                hBoxTeamDates.getChildren().add(box);
+
+                continue;
+
+            }
+
             // Per date: manage every employee
             int i = 0;
             for (Employee e : emps) {
-                //TODO Feiertage
+                // Feiertage
+                if (day.getDayOfWeek() == DayOfWeek.SATURDAY || day.getDayOfWeek() == DayOfWeek.SUNDAY){
+                    HBox box = new HBox();
+                    setSize(width, height, box);
+                    box.setStyle("-fx-background-color: #444444;" );
+                    dateBox.getChildren().add(box);
+                    continue;
+                }
+
+
+                // Feiertage
                 Absence absence = absencesOfDay.get(e);
                 if (absence == null) {
                     Label l = new Label("");
@@ -217,6 +262,18 @@ public class Controller implements Initializable {
             teamsDates.setMinWidth(width);
             i = 0;
             for (String team:teams) {
+
+                // Feiertage
+                if (day.getDayOfWeek() == DayOfWeek.SATURDAY || day.getDayOfWeek() == DayOfWeek.SUNDAY){
+                    HBox box = new HBox();
+                    setSize(width, height, box);
+                    box.setStyle("-fx-background-color: #444444;" );
+                    teamsDates.getChildren().add(box);
+                    continue;
+                }
+
+
+                // Feiertage
                 Label label1 = new Label(teamsAbsences.get(team).toString());
                 if (i%2 == 0) label1.setStyle("-fx-background-color: #cccccc;" );
                 setSize(width, height, label1);
@@ -351,6 +408,13 @@ public class Controller implements Initializable {
     }
 
     private void setSize(int width, int height, HBox node){
+        node.setMinHeight(height);
+        node.setMaxHeight(height);
+        node.setMinWidth(width);
+        node.setMaxWidth(width);
+    }
+
+    private void setSize(int width, int height, VBox node){
         node.setMinHeight(height);
         node.setMaxHeight(height);
         node.setMinWidth(width);
