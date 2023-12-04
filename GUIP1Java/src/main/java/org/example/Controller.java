@@ -178,13 +178,13 @@ public class Controller implements Initializable {
             label.setStyle("-fx-font-weight: bold");
             dateBox.getChildren().add(label);
 
-
+            //Holidays
             if (holidays.containsKey(day.format(myFormatObj))) {
                 Label label1 = new Label(holidays.get(day.format(myFormatObj)));
                 setSize(500, width, label1);
                 label1.setAlignment(Pos.CENTER);
                 label1.setRotate(-90);
-                label1.setTranslateX(-213 );
+                label1.setTranslateX(-210 );
                 label1.setTranslateY(210 );
                 label1.setStyle("-fx-background-color: #444444; -fx-text-fill: white; -fx-font-size: 26px;" );
                 dateBox.getChildren().add(label1);
@@ -198,6 +198,7 @@ public class Controller implements Initializable {
                 continue;
 
             }
+            //Holidays
 
             // Per date: manage every employee
             int i = 0;
