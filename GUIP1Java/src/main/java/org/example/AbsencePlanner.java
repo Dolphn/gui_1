@@ -131,6 +131,9 @@ public class AbsencePlanner extends Application {
             }
         }
     }
+    public static void requestAbsence(Employee employee, AbsenceType type, LocalDate startDate, LocalDate endDate, boolean approved) {
+        //TODO
+    }
 
     private static Employee getEmployeeByName(String employeeName) {
         return new Employee(); //TODO auf ID ändern, I guess?
@@ -171,7 +174,7 @@ public class AbsencePlanner extends Application {
         }
     }
 
-    public static void updateAbsence(Absence absence){
+    public static void updateAbsence(int id, LocalDate start, LocalDate end, boolean approved, Employee employee, AbsenceType absenceType){
         //TODO
     }
 
@@ -291,7 +294,7 @@ public class AbsencePlanner extends Application {
         //TODO
     }
 
-    public static ArrayList<String> getAllAbsenceTypes() {
+    public static ArrayList<AbsenceType> getAllAbsenceTypes() {
         //TODO
         return null;
     }

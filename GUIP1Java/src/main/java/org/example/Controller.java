@@ -5,25 +5,20 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -377,7 +372,7 @@ public class Controller implements Initializable {
             edit.setOnAction(event -> {
                 Stage window = new Stage();
                 try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/teams.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/absences.fxml"));
                     //TODO loader.setController(new EmployeeController(e, true));
                     window.setScene(new Scene(loader.load()));
                 } catch (IOException ex) {

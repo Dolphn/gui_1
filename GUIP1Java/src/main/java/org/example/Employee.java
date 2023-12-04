@@ -9,4 +9,7 @@ class Employee {
     String lastName;
     String favoriteColor;
     List<Absence> absences = new ArrayList<>();
+    public String getName(){
+        return this.lastName + ", " + firstName;
+    }
 }
