@@ -44,8 +44,9 @@ public class AbsencePlanner extends Application {
 
     public static void main(String[] args) {
         connection = SQLiteConnection.connect();
+        testDbErschaffen(); //Alte DB löschen, wenn die ids zu hoch werden/um die ids zu reseten
         launch(args);
-        //testDbErschaffen();
+        System.out.println(getHighestDate());
 
         // Datenbankverbindung schließen
         SQLiteConnection.disconnect(connection);
@@ -249,6 +250,30 @@ public class AbsencePlanner extends Application {
     }
 
 
+    public static ArrayList<Absence> getAllAbsences(){
+        ArrayList<Absence> absences = new ArrayList<>();
+        String getAbsencesByIdSQL = "SELECT * FROM absences ;";
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(getAbsencesByIdSQL);
+
+            while(resultSet.next()){
+                Absence absence = new Absence();
+                absence.id = resultSet.getInt(1);
+                absence.employeeId = resultSet.getInt(2);
+                absence.type = AbsenceType.getAbscenceTypeByString(resultSet.getString(3));
+                absence.startDate = resultSet.getString(4);
+                absence.endDate = resultSet.getString(5);
+                absence.approved = resultSet.getBoolean(6);
+                absences.add(absence);
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return absences;
+    }
+
+
     public static ArrayList<Absence> getAllAbsencesByEmployeeId(int id){
         ArrayList<Absence> absences = new ArrayList<>();
         String getAbsencesByIdSQL = "SELECT * FROM absences WHERE employee_id= ? ;";
@@ -436,7 +461,17 @@ public class AbsencePlanner extends Application {
 
 
     public static LocalDate getHighestDate() {
-        return null; //TODO
+        LocalDate highestDate;
+
+        ArrayList<Absence> absences = getAllAbsences();
+        highestDate = LocalDate.parse(absences.get(0).endDate);
+        for(Absence a:absences){
+            if(a.getEndDate().isAfter(highestDate)){
+                highestDate = a.getEndDate();
+            }
+        }
+
+        return highestDate;
     }
 
 
