@@ -19,6 +19,7 @@ import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -155,13 +156,13 @@ public class Controller implements Initializable {
                     return o2.lastName.compareTo(o1.lastName);
                 }
                 if (sort == 2) {
-                    return o2.firstName.compareTo(o2.firstName);
+                    return o1.lastName.compareTo(o2.lastName);
                 }
                 if (sort == 3) {
                     return o2.firstName.compareTo(o1.firstName);
 
                 }
-                return o1.lastName.compareTo(o2.lastName);
+                return o1.firstName.compareTo(o2.firstName);
             }
         });
 
@@ -169,7 +170,7 @@ public class Controller implements Initializable {
         LocalDate myDateObj = LocalDate.now();
         if (AbsencePlanner.getHighestDate() != null) {
             LocalDate highest = AbsencePlanner.getHighestDate();
-            countOfDays = Duration.between(myDateObj, highest).toDays();
+            countOfDays = Duration.between(myDateObj.atStartOfDay(), highest.atStartOfDay()).toDays();
         }
 
         //
@@ -364,7 +365,7 @@ public class Controller implements Initializable {
                 window.setTitle("Mitarbeiter ändern");
                 window.showAndWait();
             });
-            if (i%2 == 0) edit.setStyle("-fx-background-color: #cccccc;" );
+            //if (i%2 == 0) edit.setStyle("-fx-background-color: #cccccc;" );
 
             hBox.getChildren().addAll(lastname, firstname, edit);
             vBoxEmployees.getChildren().add(hBox);
