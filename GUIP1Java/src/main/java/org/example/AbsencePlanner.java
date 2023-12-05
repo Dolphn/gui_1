@@ -8,17 +8,19 @@ import javafx.stage.Stage;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class AbsencePlanner extends Application {
     private static Team team;
     private static Connection connection;
 
     public AbsencePlanner() {
-        team = new Team();
-        connection = SQLiteConnection.connect();
-        initializeDatabase();
+        //team = new Team();
+        //connection = SQLiteConnection.connect();
+        //initializeDatabase();
     }
 
     @Override
@@ -42,14 +44,15 @@ public class AbsencePlanner extends Application {
         launch(args);
         //Test
         //Testgit
-        AbsencePlanner planner = new AbsencePlanner();
-        planner.initializeDatabase();
-
-        Connection con = SQLiteConnection.connect();
+        connection = SQLiteConnection.connect();
+        initializeDatabase();
+        //testDbErschaffen();
 
         // Datenbankverbindung schließen
-        SQLiteConnection.disconnect(con);
+        SQLiteConnection.disconnect(connection);
     }
+
+    //Databases
     private static void initializeDatabase() {
         String createEmployeesTableSQL = """
                 CREATE TABLE IF NOT EXISTS employees (
@@ -80,11 +83,27 @@ public class AbsencePlanner extends Application {
         }
     }
 
-    public static void updateEmployee(String firstName, String lastName, String favoriteColor){
-        //TODO
+
+    public static boolean addEmployee(Employee employee){
+        //TODO Wie wählen wir das Team aus?
+        String insertEmployeeSQL = "INSERT INTO employees (first_name, last_name, favorite_color) VALUES (?, ?, ?);";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertEmployeeSQL)) {
+            preparedStatement.setString(1, employee.firstName);
+            preparedStatement.setString(2, employee.lastName);
+            preparedStatement.setString(3, employee.favoriteColor);
+            preparedStatement.executeUpdate();
+
+            System.out.println("Mitarbeiter '" + employee.firstName + " " + employee.lastName + "' hinzugefügt.");
+            return true;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
     }
 
-    public static void addEmployee(String firstName, String lastName, String favoriteColor) {
+    //Employess
+    public static boolean addEmployee(String firstName, String lastName, String favoriteColor) {
         //TODO Wie wählen wir das Team aus?
         String insertEmployeeSQL = "INSERT INTO employees (first_name, last_name, favorite_color) VALUES (?, ?, ?);";
 
@@ -95,10 +114,81 @@ public class AbsencePlanner extends Application {
             preparedStatement.executeUpdate();
 
             System.out.println("Mitarbeiter '" + firstName + " " + lastName + "' hinzugefügt.");
+            return true;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
+
+    private static Employee getEmployeeById(int id) {
+        Employee employee = new Employee();
+        String getEmployeeIdSQL = "SELECT * FROM employees WHERE id= ?;";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(getEmployeeIdSQL)) {
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                employee.id = resultSet.getInt("id");
+                employee.firstName = resultSet.getString("first_name");
+                employee.lastName = resultSet.getString("last_name");
+                employee.favoriteColor = resultSet.getString("favorite_color");
+                employee.absences = getAllAbsencesByEmployeeId(employee.id);
+                //System.out.println("Employee "+ employeeName + " gefunden!");
+                resultSet.close();
+                return employee;
+            }
+            resultSet.close();
+
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+        return null;
     }
+
+
+    public static ArrayList<Employee> getAllEmployees() {
+        ArrayList<Employee> employees = new ArrayList<>();
+
+        String getEmployeeIdSQL = "SELECT * FROM employees;";
+
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(getEmployeeIdSQL);
+            while (resultSet.next()) {
+                Employee employee = new Employee();
+                employee.id = resultSet.getInt("id");
+                employee.firstName = resultSet.getString("first_name");
+                employee.lastName = resultSet.getString("last_name");
+                employee.favoriteColor = resultSet.getString("favorite_color");
+                employee.absences = getAllAbsencesByEmployeeId(employee.id);
+                employees.add(employee);
+            }
+            resultSet.close();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return employees;
+    }
+
+
+    public static boolean updateEmployee(String firstName, String lastName, String favoriteColor){
+        String updateEmployeeSQL = """
+                UPDATE employees
+                SET firstName = firstName, lastName = lastName, favoriteColor = favoriteColor
+                WHERE firstName = firstName AND lastName = lastName;""";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(updateEmployeeSQL)){
+            preparedStatement.execute();
+            return true;
+        }catch(SQLException e){
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
 
     public static void deleteEmployee(int id){
         String deleteEmployeeSQL = "DELETE FROM employees WHERE id = ?;";
@@ -113,16 +203,18 @@ public class AbsencePlanner extends Application {
         }
     }
 
-    public static void requestAbsence(String employeeName, AbsenceType type, String startDate, String endDate) {
-        Employee employee = getEmployeeByName(employeeName);
+
+
+    //Absences
+    public static void requestAbsence(Employee employee, AbsenceType type, LocalDate startDate, LocalDate endDate, boolean approved) {
         if (employee != null) {
             String insertAbsenceSQL = "INSERT INTO absences (employee_id, type, start_date, end_date, approved) VALUES (?, ?, ?, ?, 0);";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertAbsenceSQL)) {
                 preparedStatement.setInt(1, employee.id);
                 preparedStatement.setString(2, type.toString());
-                preparedStatement.setString(3, startDate);
-                preparedStatement.setString(4, endDate);
+                preparedStatement.setString(3, startDate.toString());
+                preparedStatement.setString(4, endDate.toString());
                 preparedStatement.executeUpdate();
 
                 //System.out.println("Abwesenheitsantrag für '" + employeeName + "' erstellt.");
@@ -131,16 +223,9 @@ public class AbsencePlanner extends Application {
             }
         }
     }
-    public static void requestAbsence(Employee employee, AbsenceType type, LocalDate startDate, LocalDate endDate, boolean approved) {
-        //TODO
-    }
-
-    private static Employee getEmployeeByName(String employeeName) {
-        return new Employee(); //TODO auf ID ändern, I guess?
-    }
 
     public static void approveAbsence(int id, int absenceIndex){
-        Employee employee = getEmployeeByid(id);
+        Employee employee = getEmployeeById(id);
         if (employee != null && absenceIndex >= 0 && absenceIndex < employee.absences.size()) {
             int absenceId = employee.absences.get(absenceIndex).id;
             String aproveAbsenceSQL = "UPDATE absences SET approved = 1 WHERE id = ?;";
@@ -156,50 +241,7 @@ public class AbsencePlanner extends Application {
         }
     }
 
-    public static void deleteAbsence(String employeeName, int absenceIndex) {
-        //TODO Parameter des Typs Absance wäre gut, geht das??
-        Employee employee = getEmployeeByName(employeeName);
-        if (employee != null && absenceIndex >= 0 && absenceIndex < employee.absences.size()) {
-            int absenceId = employee.absences.get(absenceIndex).id;
-            String deleteAbsenceSQL = "DELETE FROM absences WHERE id = ?;";
 
-            try (PreparedStatement preparedStatement = connection.prepareStatement(deleteAbsenceSQL)) {
-                preparedStatement.setInt(1, absenceId);
-                preparedStatement.executeUpdate();
-
-                //System.out.println("Abwesenheit gelöscht für '" + employeeName + "'.");
-            } catch (SQLException e) {
-                System.err.println(e.getMessage());
-            }
-        }
-    }
-
-    public static void updateAbsence(int id, LocalDate start, LocalDate end, boolean approved, Employee employee, AbsenceType absenceType){
-        //TODO
-    }
-
-    /*
-    private static ArrayList<Employee> getAllAbsencesByEmployeeId(int id){
-        ArrayList<Employee> employees = new ArrayList<>();
-
-        String getEmployeesSQL = "SELECT * FROM employees";
-        try(Statement stm = connection.createStatement()){
-            ResultSet rs = stm.executeQuery(getEmployeesSQL);
-            while(rs.next()){
-                Employee employee = new Employee();
-                employee.id = rs.getInt(1);
-                employee.firstName = rs.getString(2);
-                employee.lastName = rs.getString(3);
-                employee.favoriteColor = rs.getString(4);
-                employee.absences = getAllAbsencesByEmployeeId(employee.id);
-                employees.add(employee);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return employees;
-    }
-*/
     public static ArrayList<Absence> getAllAbsencesByEmployeeId(int id){
         ArrayList<Absence> absences = new ArrayList<>();
         String getAbsencesByIdSQL = "SELECT * FROM absences WHERE employee_id= ? ;";
@@ -223,6 +265,113 @@ public class AbsencePlanner extends Application {
         }
         return absences;
     }
+
+
+    public static Map<Employee, Absence> getAbsencesPerEmployeeByDay(LocalDate date){
+        Map<Employee, Absence> toDayAbsences = new TreeMap<>();
+        for(Employee e:getAllEmployees()){
+            for(Absence a: e.absences){
+                //if((a.getStartDate().isBefore(date) && a.getEndDate().isAfter(date)) || a.getStartDate().isEqual(date) || a.getEndDate().isEqual(date)){
+                    toDayAbsences.put(e,a);
+                //}
+            }
+        }
+        return toDayAbsences;
+    }
+
+
+    public static boolean updateAbsence(int id, LocalDate start, LocalDate end, boolean approved, Employee employee, AbsenceType absenceType){
+        String updateAbsenceSQL = """
+                UPDATE absence
+                SET firstName = firstName, lastName = lastName, favoriteColor = favoriteColor
+                WHERE firstName = firstName AND lastName = lastName;""";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(updateAbsenceSQL)){
+            preparedStatement.execute();
+            return true;
+        }catch(SQLException e){
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
+
+    public static boolean deletAbsence(int id,AbsenceType type){ //ToDO id für Absences oder Employee
+        Employee employee = getEmployeeById(id);
+        for(Absence a:employee.absences){
+            if(a.type == type){
+                employee.absences.remove(a);
+                return true;
+            }
+        }
+        System.err.println("Absence nicht gefunden!");
+        return false;
+    }
+
+
+    public static void deleteAbsence(Absence absence) {
+        //TODO Bitte implementieren, denke, das sollte ja mit der ID kein Problem sein, oder?
+        String deletAbsenceSQL = "DELETE FROM absences WHERE id = ?;";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(deletAbsenceSQL)){
+            preparedStatement.setInt(1,absence.id);
+            preparedStatement.executeUpdate();
+        }catch(SQLException e){
+            System.err.println(e.getMessage());
+        }
+    }
+
+
+    //weiter (Test) Methoden
+
+
+    private static int getIdByName(String name){
+        String firstname = name.split(" ")[0];
+        String lastname = name.split(" ")[1];
+        String getEmployeeByNameSQL = "SELECT id FROM employees WHERE first_name = ? AND last_name = ?;";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(getEmployeeByNameSQL)){
+            preparedStatement.setString(1,firstname);
+            preparedStatement.setString(2,lastname);
+            ResultSet resultSet = preparedStatement.executeQuery(getEmployeeByNameSQL);
+            if(resultSet.next()){
+                return resultSet.getInt(1);
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+
+        return -1;
+    }
+
+
+
+    /*
+
+
+
+    /*
+    private static ArrayList<Employee> getAllAbsencesByEmployeeId(int id){
+        ArrayList<Employee> employees = new ArrayList<>();
+
+        String getEmployeesSQL = "SELECT * FROM employees";
+        try(Statement stm = connection.createStatement()){
+            ResultSet rs = stm.executeQuery(getEmployeesSQL);
+            while(rs.next()){
+                Employee employee = new Employee();
+                employee.id = rs.getInt(1);
+                employee.firstName = rs.getString(2);
+                employee.lastName = rs.getString(3);
+                employee.favoriteColor = rs.getString(4);
+                employee.absences = getAllAbsencesByEmployeeId(employee.id);
+                employees.add(employee);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return employees;
+    }
+*/
+
 
 /*
     private static Employee getEmployeeByName(String employeeName) {
@@ -251,36 +400,12 @@ public class AbsencePlanner extends Application {
     */
 
 
-    private static Employee getEmployeeByid(int id) {
 
-        //neuer versuch
-        Employee employee = new Employee();
-        //String getEmployeeIdSQL = "SELECT id FROM employees WHERE first_name="+first_name+" AND last_name="+last_name+";";
-        String getEmployeeIdSQL = "SELECT * FROM employees WHERE id= ?;";
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(getEmployeeIdSQL)) {
-            preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                employee.id = resultSet.getInt("id");
-                employee.firstName = resultSet.getString("first_name");
-                employee.lastName = resultSet.getString("last_name");
-                employee.favoriteColor = resultSet.getString("favorite_color");
-                employee.absences = getAllAbsencesByEmployeeId(employee.id);
-                //System.out.println("Employee "+ employeeName + " gefunden!");
-                resultSet.close();
-                return employee;
-            }
-            resultSet.close();
-
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        return null;
-    }
     //TODO Methoden für die AbsenceTypes?? Brauchen wir das?
 
+
+
+    //Teams
     public static ArrayList<String> getTeams(){
         ArrayList<String> list = new ArrayList<>();
         list.add("Test");
@@ -294,23 +419,7 @@ public class AbsencePlanner extends Application {
         //TODO
     }
 
-    public static ArrayList<AbsenceType> getAllAbsenceTypes() {
-        //TODO
-        return null;
-    }
 
-    public static void addAbsenceType(String type) {
-        //TODO
-    }
-
-    public static void deleteAbsenceType(AbsenceType type) {
-        //TODO
-    }
-
-    public static ArrayList<Employee> getAllEmployees() {
-        //TODO
-        return new ArrayList<>();
-    }
 
     public static LocalDate getHighestDate() {
         return null; //TODO
@@ -320,23 +429,49 @@ public class AbsencePlanner extends Application {
     //TODO Bitte die Dates als LocalDate-Objekte ausgeben, wenn möglich; Heißt, in der Klasse Absence und die returns ändern.
     // https://stackoverflow.com/questions/20165564/calculating-days-between-two-dates-with-java
 
-    public static Map<Employee, Absence> getAbsancesPerEmployeeByDay(LocalDate date){
-        return null;
-        //TODO Priorität! Wäre doch sorum am einfachsten für mich, heißt, alle Absances, die über den tag gehen werden mit dem yugehörigen MA ausgegeben
-    }
+
 
     public static ArrayList<String> getTeamsOfEmployee(int id){
         return null;
         //TODO
     }
 
-    public static void deleteAbsence(Absence absence) {
-        //TODO Bitte implementieren, denke, das sollte ja mit der ID kein Problem sein, oder?
-    }
 
-    //TODO Bitte ein paar Testdaten einfügen!
+    //Tests
 
-    public static void updateTeam(String oldT, String newT){
-        //TODO
+
+    public static  void testDbErschaffen(){
+        //Datenbank erschaffen
+        initializeDatabase();
+        //Datenbankdaten loeschen
+        String clearEmployeesTableSQL = "DELETE FROM employees;";
+
+        String clearAbsencesTableSQL = "DELETE FROM absences;";
+
+        try (PreparedStatement preparedStatement1 = connection.prepareStatement(clearEmployeesTableSQL);
+             PreparedStatement preparedStatement2 = connection.prepareStatement(clearAbsencesTableSQL)) {
+            preparedStatement1.execute();
+            preparedStatement2.execute();
+            System.out.println("Tabellen 'employees' und 'absences' geleert.");
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        //Datenbank füllen
+        //Employee bruno = new Employee("Bruno","Brenner","#00CED1");
+        //Employee daniel = new Employee("Daniel","Deiters","#1874CD");
+        //Employee ruben = new Employee("Ruben","Reiter","#00BFFF");
+
+//        addEmployee(bruno);
+//        addEmployee(daniel);
+//        addEmployee(ruben);
+//
+//        bruno.setId(getIdByName("Bruno Brenner"));
+//
+//        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//        requestAbsence(bruno,AbsenceType.SICKNESS,LocalDate.parse("01-01-2024",dtf),LocalDate.parse("05-01-2024",dtf),false);
+//        requestAbsence(daniel,AbsenceType.REMOTE_WORK,LocalDate.parse("02-01-2024",dtf),LocalDate.parse("04-01-2024",dtf),true);
+//        requestAbsence(ruben,AbsenceType.SICKNESS,LocalDate.parse("01-02-2024",dtf),LocalDate.parse("02-01-2024",dtf),false);
+//        requestAbsence(ruben,AbsenceType.TRAINING,LocalDate.parse("03-01-2024",dtf),LocalDate.parse("10-01-2024",dtf),false);
+
     }
 }
