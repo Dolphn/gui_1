@@ -82,23 +82,39 @@ public class Controller implements Initializable {
     @FXML
     public void empsSortedLastnameAsc(ActionEvent e){
         sort = 0;
+        hBoxTeamDates.getChildren().clear();
+        vBoxEmployees.getChildren().clear();
+        hBoxTeamDates.getChildren().clear();
+        vBoxTeams.getChildren().clear();
         initialize(null, null);
     }
 
     @FXML
     public void empsSortedLastnameDesc(ActionEvent e){
         sort = 1;
+        hBoxTeamDates.getChildren().clear();
+        vBoxEmployees.getChildren().clear();
+        hBoxTeamDates.getChildren().clear();
+        vBoxTeams.getChildren().clear();
         initialize(null, null);
     }
 
     @FXML
     public void empsSortedFirstnameAsc(ActionEvent e){
         sort = 2;
+        hBoxTeamDates.getChildren().clear();
+        vBoxEmployees.getChildren().clear();
+        hBoxTeamDates.getChildren().clear();
+        vBoxTeams.getChildren().clear();
         initialize(null, null);
     }
 
     public void empsSortedFirstnameDesc(ActionEvent e){
         sort = 3;
+        hBoxTeamDates.getChildren().clear();
+        vBoxEmployees.getChildren().clear();
+        hBoxTeamDates.getChildren().clear();
+        vBoxTeams.getChildren().clear();
         initialize(null, null);
     }
     @FXML
@@ -139,7 +155,7 @@ public class Controller implements Initializable {
                     return o2.lastName.compareTo(o1.lastName);
                 }
                 if (sort == 2) {
-                    return o1.firstName.compareTo(o2.firstName);
+                    return o2.firstName.compareTo(o2.firstName);
                 }
                 if (sort == 3) {
                     return o2.firstName.compareTo(o1.firstName);
@@ -294,20 +310,24 @@ public class Controller implements Initializable {
                 setSize(200, height, hBox);
 
                 Button lNA = new Button("Nachn. Auf");
-                setSize(30, height, lNA);
+                setSize(50, height, lNA);
+                lNA.setStyle("-fx-padding: 0.2;  -fx-font-size: 10;");
                 lNA.setOnAction(this::empsSortedLastnameAsc);
 
                 Button lND = new Button("Nachn. Ab");
-                setSize(30, height, lNA);
-                lNA.setOnAction(this::empsSortedLastnameDesc);
+                setSize(50, height, lND);
+                lND.setStyle("-fx-padding: 0.2;  -fx-font-size: 10;");
+                lND.setOnAction(this::empsSortedLastnameDesc);
 
                 Button fNA = new Button("Vorn. Auf");
-                setSize(30, height, lNA);
-                lNA.setOnAction(this::empsSortedFirstnameAsc);
+                setSize(50, height, fNA);
+                fNA.setStyle("-fx-padding: 0.2;  -fx-font-size: 10;");
+                fNA.setOnAction(this::empsSortedFirstnameAsc);
 
                 Button fND = new Button("Vorn. Ab");
-                setSize(30, height, lNA);
-                lNA.setOnAction(this::empsSortedFirstnameDesc);
+                setSize(50, height, fND);
+                fND.setStyle("-fx-padding: 0.2;  -fx-font-size: 10;");
+                fND.setOnAction(this::empsSortedFirstnameDesc);
 
                 hBox.getChildren().addAll(lNA, lND, fNA, fND);
                 vBoxEmployees.getChildren().add(hBox);
@@ -329,6 +349,7 @@ public class Controller implements Initializable {
 
             Button edit = new Button("Edit");
             setSize(30, height, edit);
+            edit.setStyle("-fx-padding: 0.1;  -fx-font-size: 10;");
             edit.setOnAction(event -> {
                 Stage window = new Stage();
                 try {
@@ -370,6 +391,7 @@ public class Controller implements Initializable {
 
             Button edit = new Button("Edit");
             setSize(20, height - 2, edit);
+            edit.setStyle("-fx-padding: 0.1;  -fx-font-size: 10;");
             edit.setOnAction(event -> {
                 Stage window = new Stage();
                 try {
