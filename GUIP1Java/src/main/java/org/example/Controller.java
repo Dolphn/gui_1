@@ -37,7 +37,7 @@ public class Controller implements Initializable {
 
 
 
-    private int sort = 0;
+    private int sort = 1;
     //0 Nachname aufsteigend
     //1 Nachname ab
     //2 Vorname auf
@@ -152,13 +152,13 @@ public class Controller implements Initializable {
         Collections.sort(emps, new Comparator<Employee>() {
             @Override
             public int compare(Employee o1, Employee o2) {
-                if (sort == 1){
+                if (sort == 0){
                     return o2.lastName.compareTo(o1.lastName);
                 }
-                if (sort == 2) {
+                if (sort == 1) {
                     return o1.lastName.compareTo(o2.lastName);
                 }
-                if (sort == 3) {
+                if (sort == 2) {
                     return o2.firstName.compareTo(o1.firstName);
 
                 }
@@ -303,37 +303,34 @@ public class Controller implements Initializable {
             //End of Day loop
         }
 
-        int i = 0;
+            HBox hBox1 = new HBox();
+            setSize(200, height, hBox1);
+
+            Button lNA = new Button("Nachn. Auf");
+            setSize(50, height, lNA);
+            lNA.setStyle("-fx-padding: 0.2;  -fx-font-size: 10;");
+            lNA.setOnAction(this::empsSortedLastnameAsc);
+
+            Button lND = new Button("Nachn. Ab");
+            setSize(50, height, lND);
+            lND.setStyle("-fx-padding: 0.2;  -fx-font-size: 10;");
+            lND.setOnAction(this::empsSortedLastnameDesc);
+
+            Button fNA = new Button("Vorn. Auf");
+            setSize(50, height, fNA);
+            fNA.setStyle("-fx-padding: 0.2;  -fx-font-size: 10;");
+            fNA.setOnAction(this::empsSortedFirstnameAsc);
+
+            Button fND = new Button("Vorn. Ab");
+            setSize(50, height, fND);
+            fND.setStyle("-fx-padding: 0.2;  -fx-font-size: 10;");
+            fND.setOnAction(this::empsSortedFirstnameDesc);
+
+        hBox1.getChildren().addAll(lNA, lND, fNA, fND);
+            vBoxEmployees.getChildren().add(hBox1);
+        int i = 1;
         for (Employee e:emps) {
             i++;
-            if (i == 1){
-                HBox hBox = new HBox();
-                setSize(200, height, hBox);
-
-                Button lNA = new Button("Nachn. Auf");
-                setSize(50, height, lNA);
-                lNA.setStyle("-fx-padding: 0.2;  -fx-font-size: 10;");
-                lNA.setOnAction(this::empsSortedLastnameAsc);
-
-                Button lND = new Button("Nachn. Ab");
-                setSize(50, height, lND);
-                lND.setStyle("-fx-padding: 0.2;  -fx-font-size: 10;");
-                lND.setOnAction(this::empsSortedLastnameDesc);
-
-                Button fNA = new Button("Vorn. Auf");
-                setSize(50, height, fNA);
-                fNA.setStyle("-fx-padding: 0.2;  -fx-font-size: 10;");
-                fNA.setOnAction(this::empsSortedFirstnameAsc);
-
-                Button fND = new Button("Vorn. Ab");
-                setSize(50, height, fND);
-                fND.setStyle("-fx-padding: 0.2;  -fx-font-size: 10;");
-                fND.setOnAction(this::empsSortedFirstnameDesc);
-
-                hBox.getChildren().addAll(lNA, lND, fNA, fND);
-                vBoxEmployees.getChildren().add(hBox);
-                continue;
-            }
             HBox hBox = new HBox();
             setSize(200, height, hBox);
             if (i%2 == 0) hBox.setStyle("-fx-background-color: #cccccc;" );
