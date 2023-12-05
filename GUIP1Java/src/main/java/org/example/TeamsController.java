@@ -51,10 +51,10 @@ public class TeamsController implements Initializable {
     @FXML
     void submitTeam(ActionEvent event) {
         if (edit){
-            AbsencePlanner.updateTeam(team, teamName.getText());
+            //AbsencePlanner.updateTeam(team, teamName.getText());
         }
         else {
-            AbsencePlanner.addTeam(teamName.getText());
+            //AbsencePlanner.addTeam(teamName.getText());
         }
     }
 

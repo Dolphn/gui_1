@@ -169,7 +169,7 @@ public class Controller implements Initializable {
             }
 
             LocalDate day = myDateObj.plusDays(d);
-            Map<Employee, Absence> absencesOfDay = AbsencePlanner.getAbsancesPerEmployeeByDay(day);
+            Map<Employee, Absence> absencesOfDay = AbsencePlanner.getAbsencesPerEmployeeByDay(day);
 
             VBox dateBox = new VBox();
             dateBox.setMaxWidth(width);

@@ -12,4 +12,13 @@ class Employee {
     public String getName(){
         return this.lastName + ", " + firstName;
     }
+
+    public Employee() {
+    }
+
+    public Employee(String firstName, String lastName, String favoriteColor) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.favoriteColor = favoriteColor;
+    }
 }
