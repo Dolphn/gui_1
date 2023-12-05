@@ -41,12 +41,11 @@ public class AbsencePlanner extends Application {
 
 
     public static void main(String[] args) {
-        launch(args);
+        //launch(args);
         //Test
         //Testgit
         connection = SQLiteConnection.connect();
-        initializeDatabase();
-        //testDbErschaffen();
+        testDbErschaffen();
 
         // Datenbankverbindung schließen
         SQLiteConnection.disconnect(connection);
@@ -457,21 +456,17 @@ public class AbsencePlanner extends Application {
             System.err.println(e.getMessage());
         }
         //Datenbank füllen
-        //Employee bruno = new Employee("Bruno","Brenner","#00CED1");
-        //Employee daniel = new Employee("Daniel","Deiters","#1874CD");
-        //Employee ruben = new Employee("Ruben","Reiter","#00BFFF");
 
-//        addEmployee(bruno);
-//        addEmployee(daniel);
-//        addEmployee(ruben);
-//
-//        bruno.setId(getIdByName("Bruno Brenner"));
-//
-//        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//        requestAbsence(bruno,AbsenceType.SICKNESS,LocalDate.parse("01-01-2024",dtf),LocalDate.parse("05-01-2024",dtf),false);
-//        requestAbsence(daniel,AbsenceType.REMOTE_WORK,LocalDate.parse("02-01-2024",dtf),LocalDate.parse("04-01-2024",dtf),true);
-//        requestAbsence(ruben,AbsenceType.SICKNESS,LocalDate.parse("01-02-2024",dtf),LocalDate.parse("02-01-2024",dtf),false);
-//        requestAbsence(ruben,AbsenceType.TRAINING,LocalDate.parse("03-01-2024",dtf),LocalDate.parse("10-01-2024",dtf),false);
+        addEmployee("Bruno","Brenner","#00CED1");
+        addEmployee("Daniel","Deiters","#A0CED5");
+        addEmployee("Ruben","Reiter","#4A0D65");
+
+        ArrayList<Employee> employees = getAllEmployees();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        requestAbsence(employees.get(0),AbsenceType.SICKNESS,LocalDate.parse("01-01-2024",dtf),LocalDate.parse("05-01-2024",dtf),false);
+        requestAbsence(employees.get(1),AbsenceType.REMOTE_WORK,LocalDate.parse("02-01-2024",dtf),LocalDate.parse("04-01-2024",dtf),true);
+        requestAbsence(employees.get(2),AbsenceType.SICKNESS,LocalDate.parse("01-02-2024",dtf),LocalDate.parse("02-01-2024",dtf),false);
+        requestAbsence(employees.get(2),AbsenceType.TRAINING,LocalDate.parse("03-01-2024",dtf),LocalDate.parse("10-01-2024",dtf),false);
 
     }
 }

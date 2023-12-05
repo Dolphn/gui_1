@@ -87,7 +87,7 @@ public class AbsenceController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        absenceTypes = AbsencePlanner.getAllAbsenceTypes();
+        //absenceTypes = AbsencePlanner.getAllAbsenceTypes();
         employees = AbsencePlanner.getAllEmployees();
 
         ObservableList<Employee> emps = FXCollections.observableArrayList(employees);
