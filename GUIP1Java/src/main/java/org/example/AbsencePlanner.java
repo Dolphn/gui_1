@@ -47,6 +47,12 @@ public class AbsencePlanner extends Application {
         connection = SQLiteConnection.connect();
         testDbErschaffen();
 
+        ArrayList<Employee> employees =getAllEmployees();
+        Employee e = employees.get(0);
+        //deleteEmployee(e.id);
+
+
+
         // Datenbankverbindung schließen
         SQLiteConnection.disconnect(connection);
     }
@@ -174,10 +180,11 @@ public class AbsencePlanner extends Application {
 
 
     public static boolean updateEmployee(String firstName, String lastName, String favoriteColor){
+        //ToDO Was soll diese Methode machen? Wie soll sies machen?
         String updateEmployeeSQL = """
                 UPDATE employees
-                SET firstName = firstName, lastName = lastName, favoriteColor = favoriteColor
-                WHERE firstName = firstName AND lastName = lastName;""";
+                SET first_name = ?, last_name = ?, favoriteColor = favoriteColor
+                WHERE first_name = ? AND lastName = ?;""";
 
         try(PreparedStatement preparedStatement = connection.prepareStatement(updateEmployeeSQL)){
             preparedStatement.execute();
@@ -189,7 +196,13 @@ public class AbsencePlanner extends Application {
     }
 
 
-    public static void deleteEmployee(int id){
+    public static boolean deleteEmployee(int id){
+        //Absences des Mitarbeiters aus der DB loeschen
+        ArrayList<Absence> absences = getAllAbsencesByEmployeeId(id);
+        for(Absence a: absences){
+            deleteAbsences(a.id);
+        }
+        //Mitarbeiter aus der db loeschen
         String deleteEmployeeSQL = "DELETE FROM employees WHERE id = ?;";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(deleteEmployeeSQL)) {
@@ -197,8 +210,10 @@ public class AbsencePlanner extends Application {
             preparedStatement.executeUpdate();
 
             System.out.println("Mitarbeiter '" + id + "' geloescht.");
+            return true;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
+            return false;
         }
     }
 
@@ -295,16 +310,17 @@ public class AbsencePlanner extends Application {
     }
 
 
-    public static boolean deletAbsence(int id,AbsenceType type){ //ToDO id für Absences oder Employee
-        Employee employee = getEmployeeById(id);
-        for(Absence a:employee.absences){
-            if(a.type == type){
-                employee.absences.remove(a);
-                return true;
-            }
+    public static boolean deleteAbsences(int id){ //id ist für absence
+        String deletAbsence = "DELETE FROM absences WHERE id = ?";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(deletAbsence)){
+            preparedStatement.setInt(1,id);
+            preparedStatement.execute();
+
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Absence nicht gefunden!");
+            throw new RuntimeException(e);
         }
-        System.err.println("Absence nicht gefunden!");
-        return false;
     }
 
 
@@ -463,6 +479,7 @@ public class AbsencePlanner extends Application {
 
         ArrayList<Employee> employees = getAllEmployees();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
         requestAbsence(employees.get(0),AbsenceType.SICKNESS,LocalDate.parse("01-01-2024",dtf),LocalDate.parse("05-01-2024",dtf),false);
         requestAbsence(employees.get(1),AbsenceType.REMOTE_WORK,LocalDate.parse("02-01-2024",dtf),LocalDate.parse("04-01-2024",dtf),true);
         requestAbsence(employees.get(2),AbsenceType.SICKNESS,LocalDate.parse("01-02-2024",dtf),LocalDate.parse("02-01-2024",dtf),false);
