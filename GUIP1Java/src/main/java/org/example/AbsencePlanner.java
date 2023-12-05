@@ -335,4 +335,8 @@ public class AbsencePlanner extends Application {
     }
 
     //TODO Bitte ein paar Testdaten einfügen!
+
+    public static void updateTeam(String oldT, String newT){
+        //TODO
+    }
 }

@@ -117,7 +117,7 @@ public class Controller implements Initializable {
         window.setScene(new Scene(FXMLLoader.load(getClass().getResource("/absences.fxml"))));
 
         window.initModality(Modality.APPLICATION_MODAL);
-        window.setTitle("Neuen Abwesenheit beantragen");
+        window.setTitle("Neue Abwesenheit beantragen");
         window.showAndWait();
     }
 
@@ -373,8 +373,8 @@ public class Controller implements Initializable {
             edit.setOnAction(event -> {
                 Stage window = new Stage();
                 try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/absences.fxml"));
-                    //TODO loader.setController(new EmployeeController(e, true));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/teams.fxml"));
+                    loader.setController(new TeamsController(team, true));
                     window.setScene(new Scene(loader.load()));
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
@@ -429,6 +429,16 @@ public class Controller implements Initializable {
         node.setMaxHeight(height);
         node.setMinWidth(width);
         node.setMaxWidth(width);
+    }
+
+    @FXML
+    void buttonNewTeam(ActionEvent event) throws IOException {
+        Stage window = new Stage();
+        window.setScene(new Scene(FXMLLoader.load(getClass().getResource("/teams.fxml"))));
+
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setTitle("Neues Team anlegen");
+        window.showAndWait();
     }
 
 }
