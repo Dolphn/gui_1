@@ -1,5 +1,8 @@
 package org.example;
 
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+
 class Absence {
     int id; // Abwesenheits-ID in der Datenbank
     int employeeId; // Mitarbeiter-ID, zu der diese Abwesenheit gehört
@@ -16,5 +19,13 @@ class Absence {
             string = type.toString() + " " + startDate + " " + endDate + " " + "not approved";
         }
         return string;
+    }
+
+    public LocalDate getStartDate() {
+        return LocalDate.parse(startDate);
+    }
+
+    public LocalDate getEndDate(){
+        return LocalDate.parse(endDate);
     }
 }
