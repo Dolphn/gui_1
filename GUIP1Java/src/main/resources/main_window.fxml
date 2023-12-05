@@ -46,7 +46,7 @@
         <items>
           <Button mnemonicParsing="false" onAction="#ButtonNewEmployee" text="Mitarbeiter hinzufügen" />
             <Button fx:id="buttonNewAbsence" mnemonicParsing="false" onAction="#buttonNewAbsence" text="Abwesenheit hinzufügen" />
-            <Button mnemonicParsing="false" onAction="#buttonNewTeam" text="Team hinzufügen" />
+            <Button fx:id="buttonNewTeam" mnemonicParsing="false" onAction="#buttonNewTeam" text="Team hinzufügen" />
         </items>
       </ToolBar>
    </children>

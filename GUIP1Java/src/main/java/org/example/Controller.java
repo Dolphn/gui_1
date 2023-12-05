@@ -47,6 +47,9 @@ public class Controller implements Initializable {
     private AnchorPane anchor;
 
     @FXML
+    private Button buttonNewTeam;
+
+    @FXML
     private HBox hBoxAbsences;
 
     @FXML
