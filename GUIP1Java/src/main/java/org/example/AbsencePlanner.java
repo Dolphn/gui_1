@@ -46,8 +46,12 @@ public class AbsencePlanner extends Application {
 
     public static void main(String[] args) {
         connection = SQLiteConnection.connect();
+        initializeDatabase();
         //testDbErschaffen(); //Alte DB löschen, wenn die ids zu hoch werden/um die ids zu reseten
+
+
         launch(args);
+
 
         // Datenbankverbindung schließen
         SQLiteConnection.disconnect(connection);
@@ -462,13 +466,15 @@ public class AbsencePlanner extends Application {
 
 
     public static LocalDate getHighestDate() {
-        LocalDate highestDate;
+        LocalDate highestDate = LocalDate.now();
 
         ArrayList<Absence> absences = getAllAbsences();
-        highestDate = LocalDate.parse(absences.get(0).endDate);
-        for(Absence a:absences){
-            if(a.getEndDate().isAfter(highestDate)){
-                highestDate = a.getEndDate();
+        if(!absences.isEmpty()) {
+            highestDate = LocalDate.parse(absences.get(0).endDate);
+            for (Absence a : absences) {
+                if (a.getEndDate().isAfter(highestDate)) {
+                    highestDate = a.getEndDate();
+                }
             }
         }
 
