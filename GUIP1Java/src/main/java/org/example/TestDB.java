@@ -11,7 +11,7 @@ import static org.example.AbsencePlanner.*;
 
 public class TestDB {
     public static  void testDbErschaffen(){
-        Connection connection = null;
+        Connection connection = AbsencePlanner.getConnection();
         //Datenbank erschaffen
         initializeDatabase();
         //Datenbankdaten loeschen
