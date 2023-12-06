@@ -41,6 +41,7 @@ public class TeamsController implements Initializable {
     @FXML
     void deleteTeam(ActionEvent event) {
         AbsencePlanner.deleteTeam(teamName.getText());
+        ((Node)event.getSource()).getScene().getWindow().hide();
     }
 
     @FXML

@@ -7,7 +7,6 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -19,7 +18,6 @@ import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -44,8 +42,6 @@ public class Controller implements Initializable {
     //3 Vorname ab
 
     public Button buttonNewAbsence;
-    @FXML
-    private AnchorPane anchor;
 
     @FXML
     private HBox hBoxAbsences;
@@ -53,14 +49,10 @@ public class Controller implements Initializable {
     @FXML
     private Pane paneInscroll;
 
-    @FXML
-    private HBox hBoxEmployees;
 
     @FXML
     private HBox hBoxTeamDates;
 
-    @FXML
-    private HBox hBoxTeams;
 
     @FXML
     private ScrollPane scrollPaneCalendar;
@@ -121,7 +113,13 @@ public class Controller implements Initializable {
     @FXML
     public void ButtonNewEmployee(ActionEvent e) throws IOException {
         Stage window = new Stage();
-        window.setScene(new Scene(FXMLLoader.load(getClass().getResource("/newEmployee.fxml"))));
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/newEmployee.fxml"));
+            loader.setController(new EmployeeController());
+            window.setScene(new Scene(loader.load()));
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
 
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Neuen Mitarbeiter anlegen");
@@ -131,7 +129,13 @@ public class Controller implements Initializable {
     @FXML
     public void buttonNewAbsence(ActionEvent e) throws IOException {
         Stage window = new Stage();
-        window.setScene(new Scene(FXMLLoader.load(getClass().getResource("/absences.fxml"))));
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/absences.fxml"));
+            loader.setController(new AbsenceController());
+            window.setScene(new Scene(loader.load()));
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
 
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Neue Abwesenheit beantragen");
@@ -454,11 +458,17 @@ public class Controller implements Initializable {
     @FXML
     void buttonNewTeam(ActionEvent event) throws IOException {
         Stage window = new Stage();
-        window.setScene(new Scene(FXMLLoader.load(getClass().getResource("/teams.fxml"))));
 
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/teams.fxml"));
+            loader.setController(new TeamsController());
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Neues Team anlegen");
+            window.setScene(new Scene(loader.load()));
         window.showAndWait();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
 }
