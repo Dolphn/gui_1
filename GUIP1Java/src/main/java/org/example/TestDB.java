@@ -1,5 +1,6 @@
 package org.example;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import static org.example.AbsencePlanner.*;
 
 public class TestDB {
     public static  void testDbErschaffen(){
+        Connection connection = null;
         //Datenbank erschaffen
         initializeDatabase();
         //Datenbankdaten loeschen

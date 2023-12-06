@@ -31,6 +31,30 @@ public class AbsencePlanner extends Application {
         return new ArrayList<>();
     }
 
+    public static void fetchAllEmployees() {
+        ArrayList<Employee> employeesL = new ArrayList<>();
+
+        String getEmployeeIdSQL = "SELECT * FROM employees;";
+
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(getEmployeeIdSQL);
+            while (resultSet.next()) {
+                Employee employee = new Employee();
+                employee.id = resultSet.getInt("id");
+                employee.firstName = resultSet.getString("first_name");
+                employee.lastName = resultSet.getString("last_name");
+                employee.favoriteColor = resultSet.getString("favorite_color");
+                employee.absences = getAllAbsencesByEmployeeId(employee.id);
+                employeesL.add(employee);
+            }
+            resultSet.close();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        employees = employeesL;
+    }
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -61,7 +85,7 @@ public class AbsencePlanner extends Application {
     }
 
     //Databases
-    private static void initializeDatabase() {
+    public static void initializeDatabase() {
         String createEmployeesTableSQL = """
                 CREATE TABLE IF NOT EXISTS employees (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -155,27 +179,7 @@ public class AbsencePlanner extends Application {
 
 
     public static ArrayList<Employee> getAllEmployees() {
-        ArrayList<Employee> employees = new ArrayList<>();
-
-        String getEmployeeIdSQL = "SELECT * FROM employees;";
-
-        try (Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(getEmployeeIdSQL);
-            while (resultSet.next()) {
-                Employee employee = new Employee();
-                employee.id = resultSet.getInt("id");
-                employee.firstName = resultSet.getString("first_name");
-                employee.lastName = resultSet.getString("last_name");
-                employee.favoriteColor = resultSet.getString("favorite_color");
-                employee.absences = getAllAbsencesByEmployeeId(employee.id);
-                employees.add(employee);
-            }
-            resultSet.close();
-
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        return employees;
+       return employees;
     }
 
 
