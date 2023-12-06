@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,9 +46,8 @@ public class AbsencePlanner extends Application {
 
     public static void main(String[] args) {
         connection = SQLiteConnection.connect();
-        testDbErschaffen(); //Alte DB löschen, wenn die ids zu hoch werden/um die ids zu reseten
+        //testDbErschaffen(); //Alte DB löschen, wenn die ids zu hoch werden/um die ids zu reseten
         launch(args);
-        System.out.println(getHighestDate());
 
         // Datenbankverbindung schließen
         SQLiteConnection.disconnect(connection);
@@ -124,20 +125,17 @@ public class AbsencePlanner extends Application {
 
     private static Employee getEmployeeById(int id) {
         Employee employee = new Employee();
-        String getEmployeeIdSQL = "SELECT * FROM employees WHERE id= ?;";
+        String getEmployeeIdSQL = "SELECT * FROM employees WHERE id = ?;";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(getEmployeeIdSQL)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-
             if (resultSet.next()) {
                 employee.id = resultSet.getInt("id");
                 employee.firstName = resultSet.getString("first_name");
                 employee.lastName = resultSet.getString("last_name");
                 employee.favoriteColor = resultSet.getString("favorite_color");
                 employee.absences = getAllAbsencesByEmployeeId(employee.id);
-                //System.out.println("Employee "+ employeeName + " gefunden!");
-                resultSet.close();
                 return employee;
             }
             resultSet.close();
@@ -175,8 +173,7 @@ public class AbsencePlanner extends Application {
 
 
     public static boolean updateEmployee(String firstName, String lastName, String favoriteColor, int id){
-        //ToDO Was soll diese Methode machen? Wie soll sies machen?
-        // einen bestehenden Employee (am besten anhand seiner ID updaten, also where ID = ... Nochmal bitte checken, es passiert in der db nichts!
+        //einen bestehenden Employee (am besten anhand seiner ID updaten, also where ID = ... Nochmal bitte checken, es passiert in der db nichts!
         String updateEmployeeSQL = """
                 UPDATE employees
                 SET first_name = ?, last_name = ?, favorite_color = ?
@@ -187,7 +184,7 @@ public class AbsencePlanner extends Application {
             preparedStatement.setString(2, lastName);
             preparedStatement.setString(3, favoriteColor);
             preparedStatement.setInt(4, id);
-            preparedStatement.execute();
+            preparedStatement.executeUpdate();
             return true;
         }catch(SQLException e){
             System.err.println(e.getMessage());
@@ -354,7 +351,6 @@ public class AbsencePlanner extends Application {
 
 
     public static void deleteAbsence(Absence absence) {
-        //TODO Bitte implementieren, denke, das sollte ja mit der ID kein Problem sein, oder?
         String deletAbsenceSQL = "DELETE FROM absences WHERE id = ?;";
         try(PreparedStatement preparedStatement = connection.prepareStatement(deletAbsenceSQL)){
             preparedStatement.setInt(1,absence.id);
