@@ -51,8 +51,7 @@ public class AbsencePlanner extends Application {
 
         //Debug
         if(false){
-            addEmployee("George","Lucas","#123123","Lachs");
-            addEmployee("BIll","Gates","#123123",1);
+
         }
         //Ned
 
@@ -588,11 +587,17 @@ public class AbsencePlanner extends Application {
 
 
     public static void deleteTeam(String name){
-        String deleteTeamSQL = "DELETE FROM teams WHERE name = ?;";
+        int team_id = getTeamIdByName(name);
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(deleteTeamSQL)) {
-            preparedStatement.setString(1,name);
-            preparedStatement.executeUpdate();
+        String deleteTeamSQL = "DELETE FROM teams WHERE name = ?;";
+        String deleteAllTeamEmployeeSQL = "DELETE FROM teamEmployee WHERE team_id = ?;";
+
+        try (PreparedStatement preparedStatement1 = connection.prepareStatement(deleteTeamSQL);
+             PreparedStatement preparedStatement2 = connection.prepareStatement(deleteAllTeamEmployeeSQL)) {
+            preparedStatement1.setString(1,name);
+            preparedStatement2.setInt(1, team_id);
+            preparedStatement2.executeUpdate();
+            preparedStatement1.executeUpdate();
 
             System.out.println("Team " + name + " gelöscht.");
 
@@ -602,12 +607,20 @@ public class AbsencePlanner extends Application {
     }
 
 
-    public static void deleteTeam(int id){
-        String deleteTeamSQL = "DELETE FROM teams WHERE id = ?;";
+    public static void deleteTeam(int id) {
+        //Delete alle Einträge aus teamEmployees!!!
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(deleteTeamSQL)) {
-            preparedStatement.setInt(1,id);
-            preparedStatement.executeUpdate();
+
+        String deleteTeamSQL = "DELETE FROM teams WHERE id = ?;";
+        String deleteAllTeamEmployeeSQL = "DELETE FROM teamEmployee WHERE team_id = ?;";
+
+        try (PreparedStatement preparedStatement1 = connection.prepareStatement(deleteTeamSQL);
+             PreparedStatement preparedStatement2 = connection.prepareStatement(deleteAllTeamEmployeeSQL)) {
+            preparedStatement1.setInt(1, id);
+            preparedStatement1.executeUpdate();
+            preparedStatement2.setInt(1, id);
+
+            preparedStatement2.executeUpdate();
 
             System.out.println("Team " + id + " gelöscht.");
 
