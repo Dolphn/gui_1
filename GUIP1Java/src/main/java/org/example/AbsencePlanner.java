@@ -50,13 +50,13 @@ public class AbsencePlanner extends Application {
 
 
         //Debug
-        if(true){
+        if(false){
             addEmployee("George","Lucas","#123123","Lachs");
             addEmployee("BIll","Gates","#123123",1);
         }
         //Ned
 
-        //launch(args);
+        launch(args);
 
 
         // Datenbankverbindung schließen
