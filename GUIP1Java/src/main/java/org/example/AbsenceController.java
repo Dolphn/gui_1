@@ -16,6 +16,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class AbsenceController implements Initializable {
@@ -40,7 +41,7 @@ public class AbsenceController implements Initializable {
     private DatePicker datePickerStart;
 
     @FXML
-    private Spinner<Employee> employee;
+    private Spinner<String> employee;
 
     @FXML
     private Label headline;
@@ -62,10 +63,19 @@ public class AbsenceController implements Initializable {
     @FXML
     void confirm(ActionEvent event) {
         if (edit){
-            AbsencePlanner.updateAbsence(absence.id, datePickerStart.getValue(), datePickerEnd.getValue(), approved.isSelected(), employee.getValue(), absenceType.getValue());
+            for (Employee e: employees){
+                if (Integer.parseInt(employee.getValue().split(".")[0]) == e.id){
+                    AbsencePlanner.updateAbsence(absence.id, datePickerStart.getValue(), datePickerEnd.getValue(), approved.isSelected(), e, absenceType.getValue());
+                }
+            }
         }
         else {
-            AbsencePlanner.requestAbsence(employee.getValue(), absenceType.getValue(), datePickerStart.getValue(), datePickerEnd.getValue(), approved.isSelected());
+            for (Employee e: employees){
+                if (Integer.parseInt(employee.getValue().split("\\.")[0]) == e.id){
+                    AbsencePlanner.requestAbsence(e, absenceType.getValue(), datePickerStart.getValue(), datePickerEnd.getValue(), approved.isSelected());
+                }
+            }
+
         }
 
         ((Node)event.getSource()).getScene().getWindow().hide();
@@ -87,14 +97,18 @@ public class AbsenceController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        absenceTypes = AbsencePlanner.getAllAbsenceTypes();
+        absenceTypes = new ArrayList<>(Arrays.asList(AbsenceType.values()));
         employees = AbsencePlanner.getAllEmployees();
+        ArrayList<String> empStr = new ArrayList<>();
+        for (Employee e: employees) {
+            empStr.add(e.id + ". " + e.lastName + ", " + e.firstName);
+        }
 
-        ObservableList<Employee> emps = FXCollections.observableArrayList(employees);
+        ObservableList<String> emps = FXCollections.observableArrayList(empStr);
 
         // Value factory.
-        SpinnerValueFactory<Employee> valueFactory = //
-                new SpinnerValueFactory.ListSpinnerValueFactory<Employee>(emps);
+        SpinnerValueFactory<String> valueFactory = //
+                new SpinnerValueFactory.ListSpinnerValueFactory<String>(emps);
 
 
         ObservableList<AbsenceType> absenceTypesList = FXCollections.observableArrayList(absenceTypes);
@@ -102,10 +116,10 @@ public class AbsenceController implements Initializable {
         // Value factory.
         SpinnerValueFactory<AbsenceType> valueFactory1 = //
                 new SpinnerValueFactory.ListSpinnerValueFactory<AbsenceType>(absenceTypesList);
-        if (!edit) return;
 
         employee.setValueFactory(valueFactory);
         absenceType.setValueFactory(valueFactory1);
+        if (!edit) return;
 
         approved.setSelected(absence.approved);
 
