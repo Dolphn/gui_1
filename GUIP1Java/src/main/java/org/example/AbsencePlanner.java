@@ -105,6 +105,13 @@ public class AbsencePlanner extends Application {
                 FOREIGN KEY (employee_id) REFERENCES employees(id));
                 """;
 
+        /*String createTeamTableSQL = """
+                CREATE TABLE IF NOT EXISTS team (
+                name STRING);
+                """;
+
+         */
+
         try (PreparedStatement preparedStatement1 = connection.prepareStatement(createEmployeesTableSQL);
              PreparedStatement preparedStatement2 = connection.prepareStatement(createAbsencesTableSQL)) {
             preparedStatement1.execute();
@@ -155,7 +162,7 @@ public class AbsencePlanner extends Application {
         }
     }
 
-
+/*
     private static Employee getEmployeeById(int id) {
         Employee employee = new Employee();
         String getEmployeeIdSQL = "SELECT * FROM employees WHERE id = ?;";
@@ -179,6 +186,8 @@ public class AbsencePlanner extends Application {
         return null;
     }
 
+
+ */
 
     public static ArrayList<Employee> getAllEmployees() {
        return employees;
@@ -249,10 +258,7 @@ public class AbsencePlanner extends Application {
         }
     }
 
-    /**
-     * Setzt approved auf 1
-     * @param id Id der Absence
-     */
+    /*
     public static void approveAbsence(int id){
         String aproveAbsenceSQL = "UPDATE absences SET approved = 1 WHERE id = ?;";
 
@@ -263,6 +269,8 @@ public class AbsencePlanner extends Application {
             System.err.println(e.getMessage());
         }
     }
+
+     */
 
 
     public static ArrayList<Absence> getAllAbsences(){
@@ -376,7 +384,7 @@ public class AbsencePlanner extends Application {
 
     //weiter (Test) Methoden
 
-
+    /*
     private static int getIdByName(String name){
         String firstname = name.split(" ")[0];
         String lastname = name.split(" ")[1];
@@ -396,6 +404,8 @@ public class AbsencePlanner extends Application {
         return -1;
     }
 
+
+     */
 
 
     /*
@@ -466,10 +476,29 @@ public class AbsencePlanner extends Application {
         return list; //TODO
     }
     public static void deleteTeam(String name){
-        //TODO
+        String deleteTeamSQL = "DELETE FROM team WHERE name = ?;";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(deleteTeamSQL)) {
+            preparedStatement.executeUpdate();
+
+            System.out.println("Team "+ name +" gelöscht.");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
     public static void addTeam(String name) {
-        //TODO
+        String insertTeamSQL = "INSERT INTO team (name) VALUES (?);";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertTeamSQL)) {
+            preparedStatement.setString(1,name);
+            preparedStatement.executeUpdate();
+
+            System.out.println("Team "+ name +" hinzugefügt");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -502,6 +531,8 @@ public class AbsencePlanner extends Application {
     }
 
     public static void updateTeam(String team, String text) {
+
+
     }
 
 
