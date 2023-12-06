@@ -64,7 +64,7 @@ public class AbsenceController implements Initializable {
     void confirm(ActionEvent event) {
         if (edit){
             for (Employee e: employees){
-                if (Integer.parseInt(employee.getValue().split(".")[0]) == e.id){
+                if (Integer.parseInt(employee.getValue().split("\\.")[0]) == e.id){
                     AbsencePlanner.updateAbsence(absence.id, datePickerStart.getValue(), datePickerEnd.getValue(), approved.isSelected(), e, absenceType.getValue());
                 }
             }

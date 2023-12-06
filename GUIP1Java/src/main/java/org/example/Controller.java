@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -137,6 +138,7 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        AbsencePlanner.fetchAllEmployees();
         initHolidays();
 
         int height = 18;
@@ -144,7 +146,10 @@ public class Controller implements Initializable {
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         HashMap<String, Integer> teamsAbsences = new HashMap<>();
 
+
         ArrayList<Employee> emps = AbsencePlanner.getAllEmployees();
+
+        System.out.println(emps);
 
         Collections.sort(emps, new Comparator<Employee>() {
             @Override
@@ -167,10 +172,10 @@ public class Controller implements Initializable {
         LocalDate myDateObj = LocalDate.now();
         if (AbsencePlanner.getHighestDate() != null) {
             LocalDate highest = AbsencePlanner.getHighestDate();
-            countOfDays = Duration.between(myDateObj.atStartOfDay(), highest.atStartOfDay()).toDays();
+            countOfDays = Duration.between(myDateObj.atStartOfDay(), highest.atStartOfDay()).toDays() + 1;
         }
 
-        //
+        // Per day
 
         for (long d = 0; d < countOfDays; d++) {
 
@@ -181,6 +186,7 @@ public class Controller implements Initializable {
 
             LocalDate day = myDateObj.plusDays(d);
             Map<Employee, Absence> absencesOfDay = AbsencePlanner.getAbsencesPerEmployeeByDay(day);
+
 
             VBox dateBox = new VBox();
             dateBox.setMaxWidth(width);
@@ -242,7 +248,7 @@ public class Controller implements Initializable {
                     teamsAbsences.replace(t, in + 1);
                 }
                 Button edit = new Button(absence.type.toString());
-                setSize(30, height, edit);
+                setSize(width, height, edit);
                 edit.setOnAction(event -> {
                     Stage window = new Stage();
                     try {
@@ -258,8 +264,20 @@ public class Controller implements Initializable {
                     window.showAndWait();
                     reload();
                 });
+
                 String color =  "-fx-background-color: " + e.favoriteColor + ";";
+                int r = Integer.parseInt(e.favoriteColor.substring(1,3), 16);
+                int g = Integer.parseInt(e.favoriteColor.substring(3,5), 16);
+                int b = Integer.parseInt(e.favoriteColor.substring(5), 16);
+                String fontC;
+
+                if ((0.2126*r + 0.7152*g + 0.0722*b) > 160){
+                    fontC = "-fx-color: #fff";
+                } else {
+                    fontC = "-fx-color: #000000";
+                }
                 edit.setStyle(color);
+                edit.setStyle("-fx-padding: 0.2;  -fx-font-size: 10; -fx-background-color: " + e.favoriteColor + ";" + fontC + ";");
                 dateBox.getChildren().add(edit);
 
                 i ++;
