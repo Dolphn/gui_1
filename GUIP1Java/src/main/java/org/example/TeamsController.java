@@ -57,6 +57,8 @@ public class TeamsController implements Initializable {
         else {
             AbsencePlanner.addTeam(teamName.getText());
         }
+        ((Node)event.getSource()).getScene().getWindow().hide();
+
     }
 
 
