@@ -15,8 +15,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.example.TestDB.testDbErschaffen;
+
 public class AbsencePlanner extends Application {
-    private static Connection connection;
+    public static Connection connection;
 
     public AbsencePlanner() {
         //team = new Team();
@@ -47,7 +49,7 @@ public class AbsencePlanner extends Application {
     public static void main(String[] args) {
         connection = SQLiteConnection.connect();
         initializeDatabase();
-        //testDbErschaffen(); //Alte DB löschen, wenn die ids zu hoch werden/um die ids zu reseten
+        testDbErschaffen(); //Alte DB löschen, wenn die ids zu hoch werden/um die ids zu reseten
 
 
         launch(args);
@@ -58,7 +60,7 @@ public class AbsencePlanner extends Application {
     }
 
     //Databases
-    private static void initializeDatabase() {
+    public static void initializeDatabase() {
         String createEmployeesTableSQL = """
                 CREATE TABLE IF NOT EXISTS employees (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -78,11 +80,22 @@ public class AbsencePlanner extends Application {
                 FOREIGN KEY (employee_id) REFERENCES employees(id));
                 """;
 
+        /*String createTeamTableSQL = """
+                CREATE TABLE IF NOR EXISTS team (
+                team_id INTEGER,
+                team_name STRING,
+                FOREIGN KEY (employee_id) REFERENCES employees(id));
+                
+                """;
+*/
+
         try (PreparedStatement preparedStatement1 = connection.prepareStatement(createEmployeesTableSQL);
              PreparedStatement preparedStatement2 = connection.prepareStatement(createAbsencesTableSQL)) {
+
             preparedStatement1.execute();
             preparedStatement2.execute();
-            System.out.println("Tabellen 'employees' und 'absences' erstellt.");
+
+            System.out.println("Tabellen 'employees' und 'absences' und 'team' erstellt.");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -456,11 +469,33 @@ public class AbsencePlanner extends Application {
         list.add("Rosso");
         return list; //TODO
     }
+
     public static void deleteTeam(String name){
-        //TODO
+        String deleteTeamSQL = "DELETE FROM team WHERE name = ?;";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(deleteTeamSQL)) {
+            preparedStatement.executeUpdate();
+
+            System.out.println("Team "+ name +" gelöscht.");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
+
+
     public static void addTeam(String name) {
-        //TODO
+        String insertTeamSQL = "INSERT INTO team (name) VALUES (?);";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertTeamSQL)) {
+            preparedStatement.setString(1,name);
+            preparedStatement.executeUpdate();
+
+            System.out.println("Team "+ name +" hinzugefügt");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -499,35 +534,5 @@ public class AbsencePlanner extends Application {
     //Tests
 
 
-    public static  void testDbErschaffen(){
-        //Datenbank erschaffen
-        initializeDatabase();
-        //Datenbankdaten loeschen
-        String clearEmployeesTableSQL = "DELETE FROM employees;";
 
-        String clearAbsencesTableSQL = "DELETE FROM absences;";
-
-        try (PreparedStatement preparedStatement1 = connection.prepareStatement(clearEmployeesTableSQL);
-             PreparedStatement preparedStatement2 = connection.prepareStatement(clearAbsencesTableSQL)) {
-            preparedStatement1.execute();
-            preparedStatement2.execute();
-            System.out.println("Tabellen 'employees' und 'absences' geleert.");
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        //Datenbank füllen
-
-        addEmployee("Bruno","Brenner","#00CED1");
-        addEmployee("Daniel","Deiters","#A0CED5");
-        addEmployee("Ruben","Reiter","#4A0D65");
-
-        ArrayList<Employee> employees = getAllEmployees();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
-        requestAbsence(employees.get(0),AbsenceType.SICKNESS,LocalDate.parse("01-01-2024",dtf),LocalDate.parse("05-01-2024",dtf),false);
-        requestAbsence(employees.get(1),AbsenceType.REMOTE_WORK,LocalDate.parse("02-01-2024",dtf),LocalDate.parse("04-01-2024",dtf),true);
-        requestAbsence(employees.get(2),AbsenceType.SICKNESS,LocalDate.parse("01-02-2024",dtf),LocalDate.parse("02-01-2024",dtf),false);
-        requestAbsence(employees.get(2),AbsenceType.TRAINING,LocalDate.parse("03-01-2024",dtf),LocalDate.parse("10-01-2024",dtf),false);
-
-    }
 }
