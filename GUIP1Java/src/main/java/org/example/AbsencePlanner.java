@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.example.TestDB.testDbErschaffen;
+
 public class AbsencePlanner extends Application {
     private static Connection connection;
     public static ArrayList<Employee> employees;
@@ -151,11 +153,9 @@ public class AbsencePlanner extends Application {
         return null;
     }
 
+
     public static ArrayList<Employee> getAllEmployees() {
-        return employees;
-    }
-    public static void fetchAllEmployees() {
-        ArrayList<Employee> employeesL = new ArrayList<>();
+        ArrayList<Employee> employees = new ArrayList<>();
 
         String getEmployeeIdSQL = "SELECT * FROM employees;";
 
@@ -168,14 +168,14 @@ public class AbsencePlanner extends Application {
                 employee.lastName = resultSet.getString("last_name");
                 employee.favoriteColor = resultSet.getString("favorite_color");
                 employee.absences = getAllAbsencesByEmployeeId(employee.id);
-                employeesL.add(employee);
+                employees.add(employee);
             }
             resultSet.close();
 
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-        employees = employeesL;
+        return employees;
     }
 
 
