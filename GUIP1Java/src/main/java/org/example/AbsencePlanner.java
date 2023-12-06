@@ -174,14 +174,19 @@ public class AbsencePlanner extends Application {
     }
 
 
-    public static boolean updateEmployee(String firstName, String lastName, String favoriteColor){
+    public static boolean updateEmployee(String firstName, String lastName, String favoriteColor, int id){
         //ToDO Was soll diese Methode machen? Wie soll sies machen?
+        // einen bestehenden Employee (am besten anhand seiner ID updaten, also where ID = ... Nochmal bitte checken, es passiert in der db nichts!
         String updateEmployeeSQL = """
                 UPDATE employees
-                SET first_name = ?, last_name = ?, favoriteColor = favoriteColor
-                WHERE first_name = ? AND lastName = ?;""";
+                SET first_name = ?, last_name = ?, favorite_color = ?
+                WHERE id = ?;""";
 
         try(PreparedStatement preparedStatement = connection.prepareStatement(updateEmployeeSQL)){
+            preparedStatement.setString(1, firstName);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setString(3, favoriteColor);
+            preparedStatement.setInt(4, id);
             preparedStatement.execute();
             return true;
         }catch(SQLException e){
@@ -481,7 +486,7 @@ public class AbsencePlanner extends Application {
 
 
     public static ArrayList<String> getTeamsOfEmployee(int id){
-        return null;
+        return new ArrayList<>();
         //TODO
     }
 

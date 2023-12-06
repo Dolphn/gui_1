@@ -7,7 +7,6 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -36,15 +35,13 @@ public class Controller implements Initializable {
 
 
 
-    private int sort = 0;
+    private int sort = 1;
     //0 Nachname aufsteigend
     //1 Nachname ab
     //2 Vorname auf
     //3 Vorname ab
 
     public Button buttonNewAbsence;
-    @FXML
-    private AnchorPane anchor;
 
     @FXML
     private HBox hBoxAbsences;
@@ -52,14 +49,10 @@ public class Controller implements Initializable {
     @FXML
     private Pane paneInscroll;
 
-    @FXML
-    private HBox hBoxEmployees;
 
     @FXML
     private HBox hBoxTeamDates;
 
-    @FXML
-    private HBox hBoxTeams;
 
     @FXML
     private ScrollPane scrollPaneCalendar;
@@ -82,29 +75,51 @@ public class Controller implements Initializable {
     @FXML
     public void empsSortedLastnameAsc(ActionEvent e){
         sort = 0;
+        hBoxTeamDates.getChildren().clear();
+        vBoxEmployees.getChildren().clear();
+        hBoxTeamDates.getChildren().clear();
+        vBoxTeams.getChildren().clear();
         initialize(null, null);
     }
 
     @FXML
     public void empsSortedLastnameDesc(ActionEvent e){
         sort = 1;
+        hBoxTeamDates.getChildren().clear();
+        vBoxEmployees.getChildren().clear();
+        hBoxTeamDates.getChildren().clear();
+        vBoxTeams.getChildren().clear();
         initialize(null, null);
     }
 
     @FXML
     public void empsSortedFirstnameAsc(ActionEvent e){
         sort = 2;
+        hBoxTeamDates.getChildren().clear();
+        vBoxEmployees.getChildren().clear();
+        hBoxTeamDates.getChildren().clear();
+        vBoxTeams.getChildren().clear();
         initialize(null, null);
     }
 
     public void empsSortedFirstnameDesc(ActionEvent e){
         sort = 3;
+        hBoxTeamDates.getChildren().clear();
+        vBoxEmployees.getChildren().clear();
+        hBoxTeamDates.getChildren().clear();
+        vBoxTeams.getChildren().clear();
         initialize(null, null);
     }
     @FXML
     public void ButtonNewEmployee(ActionEvent e) throws IOException {
         Stage window = new Stage();
-        window.setScene(new Scene(FXMLLoader.load(getClass().getResource("/newEmployee.fxml"))));
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/newEmployee.fxml"));
+            loader.setController(new EmployeeController());
+            window.setScene(new Scene(loader.load()));
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
 
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Neuen Mitarbeiter anlegen");
@@ -114,7 +129,13 @@ public class Controller implements Initializable {
     @FXML
     public void buttonNewAbsence(ActionEvent e) throws IOException {
         Stage window = new Stage();
-        window.setScene(new Scene(FXMLLoader.load(getClass().getResource("/absences.fxml"))));
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/absences.fxml"));
+            loader.setController(new AbsenceController());
+            window.setScene(new Scene(loader.load()));
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
 
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Neue Abwesenheit beantragen");
@@ -135,17 +156,17 @@ public class Controller implements Initializable {
         Collections.sort(emps, new Comparator<Employee>() {
             @Override
             public int compare(Employee o1, Employee o2) {
-                if (sort == 1){
+                if (sort == 0){
                     return o2.lastName.compareTo(o1.lastName);
                 }
-                if (sort == 2) {
-                    return o1.firstName.compareTo(o2.firstName);
+                if (sort == 1) {
+                    return o1.lastName.compareTo(o2.lastName);
                 }
-                if (sort == 3) {
+                if (sort == 2) {
                     return o2.firstName.compareTo(o1.firstName);
 
                 }
-                return o1.lastName.compareTo(o2.lastName);
+                return o1.firstName.compareTo(o2.firstName);
             }
         });
 
@@ -153,7 +174,7 @@ public class Controller implements Initializable {
         LocalDate myDateObj = LocalDate.now();
         if (AbsencePlanner.getHighestDate() != null) {
             LocalDate highest = AbsencePlanner.getHighestDate();
-            countOfDays = Duration.between(myDateObj, highest).toDays();
+            countOfDays = Duration.between(myDateObj.atStartOfDay(), highest.atStartOfDay()).toDays();
         }
 
         //
@@ -286,33 +307,34 @@ public class Controller implements Initializable {
             //End of Day loop
         }
 
-        int i = 0;
+            HBox hBox1 = new HBox();
+            setSize(200, height, hBox1);
+
+            Button lNA = new Button("Nachn. Auf");
+            setSize(50, height, lNA);
+            lNA.setStyle("-fx-padding: 0.2;  -fx-font-size: 10;");
+            lNA.setOnAction(this::empsSortedLastnameAsc);
+
+            Button lND = new Button("Nachn. Ab");
+            setSize(50, height, lND);
+            lND.setStyle("-fx-padding: 0.2;  -fx-font-size: 10;");
+            lND.setOnAction(this::empsSortedLastnameDesc);
+
+            Button fNA = new Button("Vorn. Auf");
+            setSize(50, height, fNA);
+            fNA.setStyle("-fx-padding: 0.2;  -fx-font-size: 10;");
+            fNA.setOnAction(this::empsSortedFirstnameAsc);
+
+            Button fND = new Button("Vorn. Ab");
+            setSize(50, height, fND);
+            fND.setStyle("-fx-padding: 0.2;  -fx-font-size: 10;");
+            fND.setOnAction(this::empsSortedFirstnameDesc);
+
+        hBox1.getChildren().addAll(lNA, lND, fNA, fND);
+            vBoxEmployees.getChildren().add(hBox1);
+        int i = 1;
         for (Employee e:emps) {
             i++;
-            if (i == 1){
-                HBox hBox = new HBox();
-                setSize(200, height, hBox);
-
-                Button lNA = new Button("Nachn. Auf");
-                setSize(30, height, lNA);
-                lNA.setOnAction(this::empsSortedLastnameAsc);
-
-                Button lND = new Button("Nachn. Ab");
-                setSize(30, height, lNA);
-                lNA.setOnAction(this::empsSortedLastnameDesc);
-
-                Button fNA = new Button("Vorn. Auf");
-                setSize(30, height, lNA);
-                lNA.setOnAction(this::empsSortedFirstnameAsc);
-
-                Button fND = new Button("Vorn. Ab");
-                setSize(30, height, lNA);
-                lNA.setOnAction(this::empsSortedFirstnameDesc);
-
-                hBox.getChildren().addAll(lNA, lND, fNA, fND);
-                vBoxEmployees.getChildren().add(hBox);
-                continue;
-            }
             HBox hBox = new HBox();
             setSize(200, height, hBox);
             if (i%2 == 0) hBox.setStyle("-fx-background-color: #cccccc;" );
@@ -329,6 +351,7 @@ public class Controller implements Initializable {
 
             Button edit = new Button("Edit");
             setSize(30, height, edit);
+            edit.setStyle("-fx-padding: 0.1;  -fx-font-size: 10;");
             edit.setOnAction(event -> {
                 Stage window = new Stage();
                 try {
@@ -343,7 +366,7 @@ public class Controller implements Initializable {
                 window.setTitle("Mitarbeiter ändern");
                 window.showAndWait();
             });
-            if (i%2 == 0) edit.setStyle("-fx-background-color: #cccccc;" );
+            //if (i%2 == 0) edit.setStyle("-fx-background-color: #cccccc;" );
 
             hBox.getChildren().addAll(lastname, firstname, edit);
             vBoxEmployees.getChildren().add(hBox);
@@ -370,6 +393,7 @@ public class Controller implements Initializable {
 
             Button edit = new Button("Edit");
             setSize(20, height - 2, edit);
+            edit.setStyle("-fx-padding: 0.1;  -fx-font-size: 10;");
             edit.setOnAction(event -> {
                 Stage window = new Stage();
                 try {
@@ -434,11 +458,17 @@ public class Controller implements Initializable {
     @FXML
     void buttonNewTeam(ActionEvent event) throws IOException {
         Stage window = new Stage();
-        window.setScene(new Scene(FXMLLoader.load(getClass().getResource("/teams.fxml"))));
 
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/teams.fxml"));
+            loader.setController(new TeamsController());
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Neues Team anlegen");
+            window.setScene(new Scene(loader.load()));
         window.showAndWait();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
 }
