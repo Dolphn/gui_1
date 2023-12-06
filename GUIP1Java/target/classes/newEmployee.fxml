@@ -36,8 +36,6 @@
         </content>
       </ScrollPane>
       <Label fx:id="selectedTeams" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="243.0" layoutY="377.0" prefHeight="18.0" prefWidth="343.0" textAlignment="RIGHT" textOverrun="CLIP" wrapText="true" />
-      <Button layoutX="225.0" layoutY="205.0" mnemonicParsing="false" onAction="#RemoveSelTeam" prefHeight="26.0" prefWidth="149.0" text="Ausgwähltes Entfernen" textFill="RED" textOverrun="CLIP" />
-      <Button layoutX="225.0" layoutY="241.0" mnemonicParsing="false" onAction="#AddSelTeam" prefHeight="26.0" prefWidth="149.0" text="Ausgwähltes hinzufügen" textOverrun="CLIP" />
       <Label layoutX="371.0" layoutY="114.0" text="Kompetenzteams wählen">
          <font>
             <Font size="18.0" />
@@ -49,7 +47,7 @@
          </font>
       </Button>
       <Button layoutX="99.0" layoutY="345.0" mnemonicParsing="false" onAction="#interrupt" text="Abbrechen" />
-      <Button layoutX="7.0" layoutY="345.0" mnemonicParsing="false" onAction="#deleteEmployee" prefHeight="26.0" prefWidth="65.0" text="Löschen" textFill="RED">
+      <Button fx:id="buttonDelete" layoutX="7.0" layoutY="345.0" mnemonicParsing="false" onAction="#deleteEmployee" prefHeight="26.0" prefWidth="65.0" text="Löschen" textFill="RED">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>

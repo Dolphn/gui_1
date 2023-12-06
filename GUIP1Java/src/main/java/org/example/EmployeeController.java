@@ -27,6 +27,8 @@ public class EmployeeController implements Initializable {
 
     @FXML
     private TextField firstname;
+    @FXML
+    private Button buttonDelete;
 
     @FXML
     private TextField lastname;
@@ -44,15 +46,7 @@ public class EmployeeController implements Initializable {
     @FXML
     private Label headline;
 
-    @FXML
-    void AddSelTeam(ActionEvent event) {
 
-    }
-
-    @FXML
-    void RemoveSelTeam(ActionEvent event) {
-
-    }
 
     @FXML
     public void interrupt(ActionEvent e) {
@@ -79,6 +73,7 @@ public class EmployeeController implements Initializable {
         if(edit) {
             AbsencePlanner.deleteEmployee(employee.id);
         }
+        ((Node)event.getSource()).getScene().getWindow().hide();
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -94,6 +89,10 @@ public class EmployeeController implements Initializable {
                 teamsList.getSelectionModel().select(s);
             }
             headline.setText("Mitarbeiter verwalten");
+        }
+        else {
+            buttonDelete.setDisable(true);
+
         }
             if (teams != null){
                 teamsList.getItems().addAll(teams);

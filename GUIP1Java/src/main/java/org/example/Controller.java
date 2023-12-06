@@ -75,40 +75,33 @@ public class Controller implements Initializable {
     @FXML
     public void empsSortedLastnameAsc(ActionEvent e){
         sort = 0;
+        reload();
+    }
+
+    public void reload(){
         hBoxTeamDates.getChildren().clear();
         vBoxEmployees.getChildren().clear();
         hBoxTeamDates.getChildren().clear();
         vBoxTeams.getChildren().clear();
+
         initialize(null, null);
     }
 
     @FXML
     public void empsSortedLastnameDesc(ActionEvent e){
         sort = 1;
-        hBoxTeamDates.getChildren().clear();
-        vBoxEmployees.getChildren().clear();
-        hBoxTeamDates.getChildren().clear();
-        vBoxTeams.getChildren().clear();
-        initialize(null, null);
+        reload();
     }
 
     @FXML
     public void empsSortedFirstnameAsc(ActionEvent e){
         sort = 2;
-        hBoxTeamDates.getChildren().clear();
-        vBoxEmployees.getChildren().clear();
-        hBoxTeamDates.getChildren().clear();
-        vBoxTeams.getChildren().clear();
-        initialize(null, null);
+        reload();
     }
 
     public void empsSortedFirstnameDesc(ActionEvent e){
         sort = 3;
-        hBoxTeamDates.getChildren().clear();
-        vBoxEmployees.getChildren().clear();
-        hBoxTeamDates.getChildren().clear();
-        vBoxTeams.getChildren().clear();
-        initialize(null, null);
+        reload();
     }
     @FXML
     public void ButtonNewEmployee(ActionEvent e) throws IOException {
@@ -263,6 +256,7 @@ public class Controller implements Initializable {
                     window.initModality(Modality.APPLICATION_MODAL);
                     window.setTitle("Abwesenheit ändern");
                     window.showAndWait();
+                    reload();
                 });
                 String color =  "-fx-background-color: " + e.favoriteColor + ";";
                 edit.setStyle(color);
@@ -365,6 +359,7 @@ public class Controller implements Initializable {
                 window.initModality(Modality.APPLICATION_MODAL);
                 window.setTitle("Mitarbeiter ändern");
                 window.showAndWait();
+                reload();
             });
             //if (i%2 == 0) edit.setStyle("-fx-background-color: #cccccc;" );
 
@@ -407,6 +402,7 @@ public class Controller implements Initializable {
                 window.initModality(Modality.APPLICATION_MODAL);
                 window.setTitle("Team ändern");
                 window.showAndWait();
+                reload();
             });
             if (j%2 == 0) hBox.setStyle("-fx-background-color: #cccccc;" );
 
