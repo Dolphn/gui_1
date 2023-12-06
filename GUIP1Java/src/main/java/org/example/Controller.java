@@ -80,7 +80,7 @@ public class Controller implements Initializable {
     }
 
     public void reload(){
-        hBoxTeamDates.getChildren().clear();
+        hBoxAbsences.getChildren().clear();
         vBoxEmployees.getChildren().clear();
         hBoxTeamDates.getChildren().clear();
         vBoxTeams.getChildren().clear();
@@ -118,6 +118,7 @@ public class Controller implements Initializable {
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Neuen Mitarbeiter anlegen");
         window.showAndWait();
+        reload();
     }
 
     @FXML
@@ -134,6 +135,7 @@ public class Controller implements Initializable {
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Neue Abwesenheit beantragen");
         window.showAndWait();
+        reload();
     }
 
     @Override
@@ -149,7 +151,6 @@ public class Controller implements Initializable {
 
         ArrayList<Employee> emps = AbsencePlanner.getAllEmployees();
 
-        System.out.println(emps);
 
         Collections.sort(emps, new Comparator<Employee>() {
             @Override
@@ -483,6 +484,7 @@ public class Controller implements Initializable {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+        reload();
     }
 
 }
