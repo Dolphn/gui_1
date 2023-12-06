@@ -65,7 +65,6 @@ public class EmployeeController implements Initializable {
             AbsencePlanner.addEmployee(firstname.getText(), lastname.getText(), str);
         }
 
-        System.out.println(employee.id);
         ((Node)event.getSource()).getScene().getWindow().hide();
     }
 
