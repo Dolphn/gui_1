@@ -16,6 +16,7 @@ package org.example;
 
 public class EmployeeController implements Initializable {
     Employee employee = null;
+    ArrayList<String> teamsOfEmployee = new ArrayList<>();
     boolean edit = false;
 
     public EmployeeController(){
@@ -61,10 +62,21 @@ public class EmployeeController implements Initializable {
             AbsencePlanner.updateEmployee(firstname.getText(), lastname.getText(),str, employee.id); //ToDo "ArrayList<String> teams" als letztes Argument einfügen für die Teamfunktionalität
             // vielleicht an einer anderen Stelle, evtl lösbar über Checkboxen bei der Teamauswahl
             // Falls nicht so, bitte die Funktion addEmployeeToTeam(int employee_id, int team_id) und deleteEmployeeFromTeam(int employee_id, int team_id) nutzen!
+            for (String team : teamsOfEmployee){
+                if (!teamsList.getSelectionModel().getSelectedItems().contains(team)){
+                    AbsencePlanner.deleteEmployeeFromTeam(employee.id, AbsencePlanner.getTeamIdByName(team));
+                }
+            }
+            for (String team :  teamsList.getSelectionModel().getSelectedItems()){
+                if (!teamsOfEmployee.contains(team)){
+                    AbsencePlanner.addEmployeeToTeam(employee.id, AbsencePlanner.getTeamIdByName(team));
+                }
+            }
 
         }
         else {
             AbsencePlanner.addEmployee(firstname.getText(), lastname.getText(), str);
+           //TODO AbsencePlanner.addEmployeeToTeam();
         }
 
         ((Node)event.getSource()).getScene().getWindow().hide();
@@ -79,9 +91,15 @@ public class EmployeeController implements Initializable {
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         ArrayList<String> teams = AbsencePlanner.getTeams();
+
+            teamsList.getItems().addAll(teams);
+        teamsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        teamsList.getSelectionModel().selectedItemProperty().addListener(this::selectionChanged);
+
         if (this.edit) {
+            teamsOfEmployee = AbsencePlanner.getTeamsOfEmployee(employee.id);
+
             lastname.setText(employee.lastName);
             firstname.setText(employee.firstName);
             colorPicker.setValue(Color.valueOf(employee.favoriteColor));
@@ -96,11 +114,6 @@ public class EmployeeController implements Initializable {
             buttonDelete.setDisable(true);
 
         }
-            if (teams != null){
-                teamsList.getItems().addAll(teams);
-            }
-            teamsList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            teamsList.getSelectionModel().selectedItemProperty().addListener(this::selectionChanged);
     }
 
     private void selectionChanged(ObservableValue<? extends String> observable, String oldV, String newV){

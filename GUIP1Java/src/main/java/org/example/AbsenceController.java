@@ -6,11 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.*;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -45,6 +41,9 @@ public class AbsenceController implements Initializable {
 
     @FXML
     private Label headline;
+
+    @FXML
+    private Button buttonDelete;
 
     @FXML
     private Label selectedEmployee;
@@ -119,7 +118,10 @@ public class AbsenceController implements Initializable {
 
         employee.setValueFactory(valueFactory);
         absenceType.setValueFactory(valueFactory1);
-        if (!edit) return;
+        if (!edit){
+            buttonDelete.setDisable(true);
+            return;
+        }
 
         approved.setSelected(absence.approved);
 

@@ -29,7 +29,7 @@
          </font>
       </Button>
       <Button layoutX="206.0" layoutY="345.0" mnemonicParsing="false" onAction="#interrupt" text="Abbrechen" />
-      <Button layoutX="7.0" layoutY="345.0" mnemonicParsing="false" onAction="#deleteAbsence" prefHeight="26.0" prefWidth="65.0" text="Löschen" textFill="RED">
+      <Button fx:id="buttonDelete" layoutX="7.0" layoutY="345.0" mnemonicParsing="false" onAction="#deleteAbsence" prefHeight="26.0" prefWidth="65.0" text="Löschen" textFill="RED">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
