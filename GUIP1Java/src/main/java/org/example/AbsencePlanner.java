@@ -221,8 +221,8 @@ public class AbsencePlanner extends Application {
         return employees;
     }
 
+
     public static boolean updateEmployee(String firstName, String lastName, String favoriteColor, int id) {
-        //einen bestehenden Employee (am besten anhand seiner ID updaten, also where ID = ... Nochmal bitte checken, es passiert in der db nichts!
         String updateEmployeeSQL = """
                 UPDATE employees
                 SET first_name = ?, last_name = ?, favorite_color = ?
@@ -238,6 +238,33 @@ public class AbsencePlanner extends Application {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             return false;
+        }
+    }
+
+    public static boolean updateEmployee(String firstName, String lastName, String favoriteColor, int id,ArrayList<String> teams) {
+        updateEmployeeTeams(id, teams);
+        String updateEmployeeSQL = """
+                UPDATE employees
+                SET first_name = ?, last_name = ?, favorite_color = ?
+                WHERE id = ?;""";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(updateEmployeeSQL)) {
+            preparedStatement.setString(1, firstName);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setString(3, favoriteColor);
+            preparedStatement.setInt(4, id);
+            preparedStatement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
+    private static void updateEmployeeTeams(int employee_id, ArrayList<String> teams) {
+        deleteEmployeeFromAllTeams(employee_id);
+        for(String team: teams){
+            addEmployeeToTeam(employee_id,team);
         }
     }
 

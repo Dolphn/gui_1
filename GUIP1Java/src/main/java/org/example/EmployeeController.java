@@ -58,7 +58,10 @@ public class EmployeeController implements Initializable {
         Color color = colorPicker.getValue();
         String str = String.format( "#%02X%02X%02X", (int)( color.getRed() * 255 ), (int)( color.getGreen() * 255 ), (int)( color.getBlue() * 255 ) );
         if (edit){
-            AbsencePlanner.updateEmployee(firstname.getText(), lastname.getText(),str, employee.id);
+            AbsencePlanner.updateEmployee(firstname.getText(), lastname.getText(),str, employee.id); //ToDo "ArrayList<String> teams" als letztes Argument einfügen für die Teamfunktionalität
+            // vielleicht an einer anderen Stelle, evtl lösbar über Checkboxen bei der Teamauswahl
+            // Falls nicht so, bitte die Funktion addEmployeeToTeam(int employee_id, int team_id) und deleteEmployeeFromTeam(int employee_id, int team_id) nutzen!
+
         }
         else {
             AbsencePlanner.addEmployee(firstname.getText(), lastname.getText(), str);
