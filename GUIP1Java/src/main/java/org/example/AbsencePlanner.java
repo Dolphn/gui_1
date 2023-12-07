@@ -94,21 +94,29 @@ public class AbsencePlanner extends Application {
     }
 
     //Employess
-    public static boolean addEmployee(String firstName, String lastName, String favoriteColor) {
-        //TODO Wie wählen wir das Team aus?
+    public static int addEmployee(String firstName, String lastName, String favoriteColor) {
+        int id;
         String insertEmployeeSQL = "INSERT INTO employees (first_name, last_name, favorite_color) VALUES (?, ?, ?);";
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(insertEmployeeSQL)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertEmployeeSQL, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, firstName);
             preparedStatement.setString(2, lastName);
             preparedStatement.setString(3, favoriteColor);
             preparedStatement.executeUpdate();
 
             System.out.println("Mitarbeiter '" + firstName + " " + lastName + "' hinzugefügt.");
-            return true;
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    System.out.println(generatedKeys.getInt(1));
+                    return generatedKeys.getInt(1);
+                }
+                else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
+                }
+            }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-            return false;
+            return 0;
         }
     }
 
