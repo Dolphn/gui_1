@@ -1,9 +1,7 @@
-package org.example;
+package org.example.entities;
 
-enum AbsenceType {
+public enum AbsenceType {
     VACATION, UNPAID_LEAVE, TRAINING, REMOTE_WORK, SICKNESS, ACCIDENT;
-
-
 
     public static AbsenceType getAbscenceTypeByString(String text){
         if(text.equals("VACATION")) {

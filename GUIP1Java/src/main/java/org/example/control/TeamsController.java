@@ -1,4 +1,4 @@
-package org.example;
+package org.example.control;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import org.example.impl.AbsencePlanner;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -25,16 +26,12 @@ public class TeamsController implements Initializable {
     }
     @FXML
     private Button deleteTeam;
-
     @FXML
     private Button submit;
-
     @FXML
     private Button interrupt;
-
     @FXML
     private Label label;
-
     @FXML
     private TextField teamName;
 

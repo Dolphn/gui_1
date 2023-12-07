@@ -1,4 +1,8 @@
-package org.example;
+package org.example.datenbank;
+
+import org.example.entities.AbsenceType;
+import org.example.entities.Employee;
+import org.example.impl.AbsencePlanner;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,7 +11,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import static org.example.AbsencePlanner.*;
+import static org.example.datenbank.DB.initializeDatabase;
+import static org.example.impl.AbsencePlanner.*;
 
 public class TestDB {
     public static  void testDbErschaffen(){
@@ -36,10 +41,10 @@ public class TestDB {
         ArrayList<Employee> employees = getAllEmployees();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-        requestAbsence(employees.get(0),AbsenceType.SICKNESS, LocalDate.parse("01-01-2024",dtf),LocalDate.parse("05-01-2024",dtf),false);
+        requestAbsence(employees.get(0), AbsenceType.SICKNESS, LocalDate.parse("01-01-2024",dtf),LocalDate.parse("05-01-2024",dtf),false);
         requestAbsence(employees.get(1),AbsenceType.REMOTE_WORK,LocalDate.parse("02-01-2024",dtf),LocalDate.parse("04-01-2024",dtf),true);
         requestAbsence(employees.get(2),AbsenceType.SICKNESS,LocalDate.parse("01-02-2024",dtf),LocalDate.parse("02-01-2024",dtf),false);
-        requestAbsence(employees.get(2),AbsenceType.TRAINING,LocalDate.parse("03-01-2024",dtf),LocalDate.parse("10-01-2024",dtf),false);
+        requestAbsence(employees.get(2),AbsenceType.UNPAID_LEAVE,LocalDate.parse("03-01-2024",dtf),LocalDate.parse("10-01-2024",dtf),false);
 
     }
 }

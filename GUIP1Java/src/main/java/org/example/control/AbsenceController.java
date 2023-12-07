@@ -1,4 +1,4 @@
-package org.example;
+package org.example.control;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,6 +7,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+
+import org.example.impl.AbsencePlanner;
+import org.example.entities.AbsenceType;
+import org.example.entities.Absence;
+import org.example.entities.Employee;
+
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -18,10 +24,8 @@ import java.util.ResourceBundle;
 public class AbsenceController implements Initializable {
     DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-
     @FXML
     private Spinner<AbsenceType> absenceType;
-
     private Absence absence = null;
     private boolean edit = false;
     private ArrayList<Employee> employees;
@@ -29,25 +33,18 @@ public class AbsenceController implements Initializable {
 
     @FXML
     private CheckBox approved;
-
     @FXML
     private DatePicker datePickerEnd;
-
     @FXML
     private DatePicker datePickerStart;
-
     @FXML
     private Spinner<String> employee;
-
     @FXML
     private Label headline;
-
     @FXML
     private Button buttonDelete;
-
     @FXML
     private Label selectedEmployee;
-
     @FXML
     private Label selectedType;
 
