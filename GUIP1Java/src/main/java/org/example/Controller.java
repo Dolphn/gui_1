@@ -29,9 +29,38 @@ public class Controller implements Initializable {
         holidays.put("25.12.2023", "1. Weihnachtsfeiertag");
         holidays.put("26.12.2023", "2. Weihnachtsfeiertag");
         holidays.put("01.01.2024", "Neujahr");
-        holidays.put("08.12.2023", "Tag der Gürtelrose");
-
-//TODO
+        holidays.put("29.03.2024", "Karfreitag");
+        holidays.put("01.04.2024", "Ostermontag");
+        holidays.put("01.05.2024", "Tag der Arbeit");
+        holidays.put("09.05.2024", "Christi Himmelfahrt");
+        holidays.put("20.05.2024", "Pfingstmontag");
+        holidays.put("30.05.2024", "Fronleichnam");
+        holidays.put("03.10.2024", "Tag der Deutschen Einheit");
+        holidays.put("01.11.2024", "Allerheiligen");
+        holidays.put("25.12.2024", "1. Weihnachtsfeiertag");
+        holidays.put("26.12.2024", "2. Weihnachtsfeiertag");
+        holidays.put("01.01.2025", "Neujahr");
+        holidays.put("18.04.2025", "Karfreitag");
+        holidays.put("21.04.2025", "Ostermontag");
+        holidays.put("01.05.2025", "Tag der Arbeit");
+        holidays.put("29.05.2025", "Christi Himmelfahrt");
+        holidays.put("09.06.2025", "Pfingstmontag");
+        holidays.put("19.06.2025", "Fronleichnam");
+        holidays.put("03.10.2025", "Tag der Deutschen Einheit");
+        holidays.put("01.11.2025", "Allerheiligen");
+        holidays.put("25.12.2025", "1. Weihnachtsfeiertag");
+        holidays.put("26.12.2025", "2. Weihnachtsfeiertag");
+        holidays.put("01.01.2026", "Neujahr");
+        holidays.put("03.04.2026", "Karfreitag");
+        holidays.put("06.04.2026", "Ostermontag");
+        holidays.put("01.05.2026", "Tag der Arbeit");
+        holidays.put("14.05.2026", "Christi Himmelfahrt");
+        holidays.put("25.05.2026", "Pfingstmontag");
+        holidays.put("04.06.2026", "Fronleichnam");
+        holidays.put("03.10.2026", "Tag der Deutschen Einheit");
+        holidays.put("01.11.2026", "Allerheiligen");
+        holidays.put("25.12.2026", "1. Weihnachtsfeiertag");
+        holidays.put("26.12.2026", "2. Weihnachtsfeiertag");
     }
 
 
@@ -169,12 +198,12 @@ public class Controller implements Initializable {
             }
         });
 
-        long countOfDays = 20;
+        long countOfDays = 365;
         LocalDate myDateObj = LocalDate.now();
         if (AbsencePlanner.getHighestDate() != null) {
             LocalDate highest = AbsencePlanner.getHighestDate();
             countOfDays = Duration.between(myDateObj.atStartOfDay(), highest.atStartOfDay()).toDays() + 1;
-            if(countOfDays<=1) countOfDays = 20;
+            if(countOfDays<=1) countOfDays = 365;
         }
 
         // Per day
@@ -208,13 +237,13 @@ public class Controller implements Initializable {
                 label1.setRotate(-90);
                 label1.setTranslateX(-210 );
                 label1.setTranslateY(210 );
-                label1.setStyle("-fx-background-color: #444444; -fx-text-fill: white; -fx-font-size: 26px;" );
+                label1.setStyle("-fx-background-color: #ff0000; -fx-text-fill: white; -fx-font-size: 26px;" );
                 dateBox.getChildren().add(label1);
                 hBoxAbsences.getChildren().add(dateBox);
 
                 VBox box = new VBox();
                 setSize(width, 200, box);
-                box.setStyle("-fx-background-color: #444444;" );
+                box.setStyle("-fx-background-color: #ff0000;" );
                 hBoxTeamDates.getChildren().add(box);
 
                 continue;
@@ -229,7 +258,7 @@ public class Controller implements Initializable {
                 if (day.getDayOfWeek() == DayOfWeek.SATURDAY || day.getDayOfWeek() == DayOfWeek.SUNDAY){
                     HBox box = new HBox();
                     setSize(width, height, box);
-                    box.setStyle("-fx-background-color: #444444;" );
+                    box.setStyle("-fx-background-color: #9fb6cd;" );
                     dateBox.getChildren().add(box);
                     continue;
                 }
@@ -298,7 +327,7 @@ public class Controller implements Initializable {
                 if (day.getDayOfWeek() == DayOfWeek.SATURDAY || day.getDayOfWeek() == DayOfWeek.SUNDAY){
                     HBox box = new HBox();
                     setSize(width, height, box);
-                    box.setStyle("-fx-background-color: #444444;" );
+                    box.setStyle("-fx-background-color: #9fb6cd;" );
                     teamsDates.getChildren().add(box);
                     continue;
                 }
