@@ -29,8 +29,8 @@ public class AbsencePlanner extends Application {
 
     public static void main(String[] args) {
         connection = SQLiteConnection.connect();
-       testDbErschaffen(); //Alte DB löschen, wenn die ids zu hoch werden/um die ids zu reseten
-
+        //testDbErschaffen(); //Alte DB löschen, wenn die ids zu hoch werden/um die ids zu reseten
+        initializeDatabase();
 
         //Debug
         if (debug) {
