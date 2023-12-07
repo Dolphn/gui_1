@@ -103,7 +103,7 @@ public class AbsencePlanner {
         //Loeschen aller Teammiedgliedschaften
         deleteEmployeeFromAllTeams(id);
         //Mitarbeiter aus der db loeschen
-        String deleteEmployeeSQL = "DELETE FROM employee WHERE id = ?;";
+        String deleteEmployeeSQL = "DELETE FROM employees WHERE id = ?;";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(deleteEmployeeSQL)) {
             preparedStatement.setInt(1, id);
