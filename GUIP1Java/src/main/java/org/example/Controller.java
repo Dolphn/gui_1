@@ -203,7 +203,7 @@ public class Controller implements Initializable {
         if (AbsencePlanner.getHighestDate() != null) {
             LocalDate highest = AbsencePlanner.getHighestDate();
             countOfDays = Duration.between(myDateObj.atStartOfDay(), highest.atStartOfDay()).toDays() + 1;
-            if(countOfDays<=1) countOfDays = 365;
+            if(countOfDays<=364) countOfDays = 365;
         }
 
         // Per day
