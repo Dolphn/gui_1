@@ -75,8 +75,11 @@ public class EmployeeController implements Initializable {
 
         }
         else {
-            AbsencePlanner.addEmployee(firstname.getText(), lastname.getText(), str);
-           //TODO AbsencePlanner.addEmployeeToTeam();
+            int id = AbsencePlanner.addEmployee(firstname.getText(), lastname.getText(), str);
+            for (String team : teamsList.getSelectionModel().getSelectedItems()){
+
+            AbsencePlanner.addEmployeeToTeam(id, AbsencePlanner.getTeamIdByName(team));
+            }
         }
 
         ((Node)event.getSource()).getScene().getWindow().hide();
