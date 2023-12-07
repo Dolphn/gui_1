@@ -1,4 +1,4 @@
-package org.example;
+package org.example.control;
 
         import javafx.beans.value.ObservableValue;
         import javafx.collections.ObservableList;
@@ -8,13 +8,15 @@ package org.example;
         import javafx.scene.Node;
         import javafx.scene.control.*;
         import javafx.scene.paint.Color;
+        import org.example.impl.AbsencePlanner;
+        import org.example.entities.Employee;
 
         import java.net.URL;
         import java.util.ArrayList;
-        import java.util.Arrays;
         import java.util.ResourceBundle;
 
 public class EmployeeController implements Initializable {
+
     Employee employee = null;
     ArrayList<String> teamsOfEmployee = new ArrayList<>();
     boolean edit = false;
@@ -30,23 +32,16 @@ public class EmployeeController implements Initializable {
     private TextField firstname;
     @FXML
     private Button buttonDelete;
-
     @FXML
     private TextField lastname;
-
     @FXML
     private Label selectedTeams;
-
     @FXML
     private ListView<String> teamsList;
-
     @FXML
     private ColorPicker colorPicker;
-
-
     @FXML
     private Label headline;
-
 
 
     @FXML

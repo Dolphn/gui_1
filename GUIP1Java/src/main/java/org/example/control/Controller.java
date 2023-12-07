@@ -1,4 +1,4 @@
-package org.example;
+package org.example.control;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,9 +10,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.example.impl.AbsencePlanner;
+import org.example.entities.Absence;
+import org.example.entities.Employee;
 
 import java.io.IOException;
 import java.net.URL;
@@ -64,7 +66,6 @@ public class Controller implements Initializable {
     }
 
 
-
     private int sort = 1;
     //0 Nachname aufsteigend
     //1 Nachname ab
@@ -79,10 +80,8 @@ public class Controller implements Initializable {
     @FXML
     private Pane paneInscroll;
 
-
     @FXML
     private HBox hBoxTeamDates;
-
 
     @FXML
     private ScrollPane scrollPaneCalendar;
@@ -98,10 +97,7 @@ public class Controller implements Initializable {
 
     @FXML
     private VBox vBoxTeams;
-    @FXML
-    public void employeesSorted(ActionEvent e){
 
-    }
     @FXML
     public void empsSortedLastnameAsc(ActionEvent e){
         sort = 0;
@@ -203,7 +199,7 @@ public class Controller implements Initializable {
         if (AbsencePlanner.getHighestDate() != null) {
             LocalDate highest = AbsencePlanner.getHighestDate();
             countOfDays = Duration.between(myDateObj.atStartOfDay(), highest.atStartOfDay()).toDays() + 1;
-            if(countOfDays<=1) countOfDays = 365;
+            if(countOfDays<=364) countOfDays = 365;
         }
 
         // Per day
@@ -314,15 +310,14 @@ public class Controller implements Initializable {
                 i ++;
             }
             hBoxAbsences.getChildren().add(dateBox);
-            // Team-Calendar
 
+            // Team-Calendar
 
             VBox teamsDates = new VBox();
             teamsDates.setMinWidth(width);
             teamsDates.setMinWidth(width);
             i = 0;
             for (String team:teams) {
-
                 // Feiertage
                 if (day.getDayOfWeek() == DayOfWeek.SATURDAY || day.getDayOfWeek() == DayOfWeek.SUNDAY){
                     HBox box = new HBox();
@@ -331,8 +326,6 @@ public class Controller implements Initializable {
                     teamsDates.getChildren().add(box);
                     continue;
                 }
-
-
                 // Feiertage
                 Label label1 = new Label(teamsAbsences.get(team).toString());
                 if (i%2 == 0) label1.setStyle("-fx-background-color: #cccccc;" );
@@ -343,10 +336,6 @@ public class Controller implements Initializable {
                 i++;
             }
             hBoxTeamDates.getChildren().add(teamsDates);
-
-
-
-
             //End of Day loop
         }
 
@@ -410,8 +399,6 @@ public class Controller implements Initializable {
                 window.showAndWait();
                 reload();
             });
-            //if (i%2 == 0) edit.setStyle("-fx-background-color: #cccccc;" );
-
             hBox.getChildren().addAll(lastname, firstname, edit);
             vBoxEmployees.getChildren().add(hBox);
         }
@@ -420,7 +407,6 @@ public class Controller implements Initializable {
         //
         // Teams
         //
-
 
 
         int j = 0;
@@ -516,5 +502,4 @@ public class Controller implements Initializable {
         }
         reload();
     }
-
 }
